@@ -5,6 +5,12 @@ import PackageDescription
 
 let package = Package(
     name: "HDXLCommonUtilities",
+    platforms: [
+      SupportedPlatform.iOS(.v13),
+      SupportedPlatform.macOS(.v10_15),
+      SupportedPlatform.tvOS(.v13),
+      SupportedPlatform.watchOS(.v6)
+    ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
