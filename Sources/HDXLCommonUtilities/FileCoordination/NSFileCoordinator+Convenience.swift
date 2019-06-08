@@ -6,6 +6,22 @@ import Foundation
 
 public extension NSFileCoordinator {
   
+  /// Generic, Swifty-er wrapper around `NSFileCoordinator.coordinate(readingItemAt:options:byAccessor:)`.
+  ///
+  /// For specific uses you may find specialized wrappers around this method more suitable.
+  ///
+  /// - parameter url: The URL of the item to read
+  /// - parameter options: Options to express the reading intent.
+  /// - parameter reader: The closure within-which you gain coordinated access to the item at `url`, if you do.
+  ///
+  /// - returns: The value returned from your closure, on success; throws an error on failure.
+  ///
+  /// - throws: a `FileCoordinationError` if either (a) the coordinator throws an error or (b) your closure encounters an error.
+  ///
+  /// - warning: This *is* a synchronous method and it will block the calling thread until complete.
+  ///
+  /// - todo: Consider capturing the callsite and accepting an optional `OSLog` (into which events get automatically-logged).
+  ///
   @inlinable
   func synchronouslyCoordinate<R>(
     readingItemAt url: URL,
@@ -34,6 +50,23 @@ public extension NSFileCoordinator {
     )
   }
 
+  /// Generic, Swifty-er wrapper around `NSFileCoordinator.coordinate(writingItemAt:options:byAccessor:)`.
+  ///
+  /// For specific uses you may find specialized wrappers around this method more suitable.
+  ///
+  /// - parameter url: The URL of the item to write
+  /// - parameter options: Options to express the writing intent.
+  /// - parameter reader: The closure within-which you gain coordinated access to the item at `url`, if you do.
+  ///
+  /// - returns: The value returned from your closure, on success; throws an error on failure.
+  ///
+  /// - throws: a `FileCoordinationError` if either (a) the coordinator throws an error or (b) your closure encounters an error.
+  ///
+  /// - warning: This *is* a synchronous method and it will block the calling thread until complete.
+  /// - warning: Per docs, `NSFileCoordinator.WritingOptions` are mutually-exclusive; prefer the special-purpose wrappers to calling this method directly.
+  ///
+  /// - todo: Consider capturing the callsite and accepting an optional `OSLog` (into which events get automatically-logged).
+  ///
   @inlinable
   func synchronouslyCoordinate<R>(
     writingItemAt url: URL,
@@ -62,6 +95,25 @@ public extension NSFileCoordinator {
     )
   }
 
+  /// Generic, Swifty-er wrapper around `NSFileCoordinator.coordinate(readingItemAt:options:writingItemAt:options:byAccessor:)`.
+  ///
+  /// For specific uses you may find specialized wrappers around this method more suitable.
+  ///
+  /// - parameter readingURL: The URL of the item to read
+  /// - parameter readingOptions: Options to express the reading intent.
+  /// - parameter writingURL: The URL of the item to write
+  /// - parameter writingOptions: Options to express the writing intent.
+  /// - parameter reader: The closure within-which you gain coordinated access to the requested items, if you do.
+  ///
+  /// - returns: The value returned from your closure, on success; throws an error on failure.
+  ///
+  /// - throws: a `FileCoordinationError` if either (a) the coordinator throws an error or (b) your closure encounters an error.
+  ///
+  /// - warning: This *is* a synchronous method and it will block the calling thread until complete.
+  /// - warning: Per docs, `NSFileCoordinator.WritingOptions` are mutually-exclusive; be careful!
+  ///
+  /// - todo: Consider capturing the callsite and accepting an optional `OSLog` (into which events get automatically-logged).
+  ///
   @inlinable
   func synchronouslyCoordinate<R>(
     readingItemAt readingURL: URL,
@@ -94,6 +146,25 @@ public extension NSFileCoordinator {
     )
   }
 
+  /// Generic, Swifty-er wrapper around `NSFileCoordinator.coordinate(writingItemAt:options:writingItemAt:options:byAccessor:)`.
+  ///
+  /// For specific uses you may find specialized wrappers around this method more suitable.
+  ///
+  /// - parameter writingURL1: The URL of the first item to write.
+  /// - parameter options1: Options to express the writing intent for the first item.
+  /// - parameter writingURL2: The URL of the second item to write
+  /// - parameter options2: Options to express the writing intent for the second item.
+  /// - parameter reader: The closure within-which you gain coordinated access to the requested items, if you do.
+  ///
+  /// - returns: The value returned from your closure, on success; throws an error on failure.
+  ///
+  /// - throws: a `FileCoordinationError` if either (a) the coordinator throws an error or (b) your closure encounters an error.
+  ///
+  /// - warning: This *is* a synchronous method and it will block the calling thread until complete.
+  /// - warning: Per docs, `NSFileCoordinator.WritingOptions` are mutually-exclusive; be careful!
+  ///
+  /// - todo: Consider capturing the callsite and accepting an optional `OSLog` (into which events get automatically-logged).
+  ///
   @inlinable
   func synchronouslyCoordinate<R>(
     writingItemAt writingURL1: URL,
@@ -128,6 +199,9 @@ public extension NSFileCoordinator {
   
 }
 
+/// Internal utility for condensing the local variables involved in our coordination wrappers down to either a
+/// success or an error.
+///
 @usableFromInline
 internal func reportCoordinationResult<R>(
   coordinationError: NSError?,

@@ -164,14 +164,16 @@ extension CompleteEnumMap : CompleteMap {
   
   @inlinable
   public subscript(key: Key) -> Value {
-    for entry in self.storage where key == entry.key {
-      return entry.value
+    get {
+      for entry in self.storage where key == entry.key {
+        return entry.value
+      }
+      preconditionFailure(
+        """
+        Couldn't find value for \(String(reflecting: key)) in supposedly-complete enum map \(String(reflecting: self))!
+        """
+      )
     }
-    preconditionFailure(
-      """
-      Couldn't find value for \(String(reflecting: key)) in supposedly-complete enum map \(String(reflecting: self))!
-      """
-    )
   }
   
 }

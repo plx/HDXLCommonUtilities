@@ -1,15 +1,16 @@
 //
-//  LazyValue.swift
+//  ResettableLazyValue.swift
 //
 
 import Foundation
 
-public struct LazyValue<Value> {
 
+public struct ResettableLazyValue<Value> {
+  
   public typealias ValueSource = () -> Value
   
   @usableFromInline
-  internal typealias Storage = LazyValueStorage<Value>
+  internal typealias Storage = ResettableLazyValueStorage<Value>
   
   @usableFromInline
   internal let storage: Storage
@@ -27,46 +28,53 @@ public struct LazyValue<Value> {
       )
     )
   }
-
+  
   @inlinable
   public var value: Value {
     get {
       return self.storage.obtainValue()
     }
   }
-
+  
+  @inlinable
+  public func reset() {
+    self.storage.resetValue()
+  }
+  
 }
 
 @usableFromInline
-internal final class LazyValueStorage<Value> {
+internal final class ResettableLazyValueStorage<Value> {
   
   @usableFromInline
   internal typealias ValueSource = () -> Value
   
   @usableFromInline
-  internal enum State {
-    case pending(ValueSource)
-    case acquired(Value)
+  internal let valueSource: ValueSource
+  
+  @usableFromInline
+  internal fileprivate(set) var value: Value? = nil
+  
+  @usableFromInline
+  internal func resetValue() {
+    self.value = nil
   }
   
   @usableFromInline
-  internal fileprivate(set) var state: State
-  
-  @usableFromInline
   internal func obtainValue() -> Value {
-    switch self.state {
-    case .pending(let source):
-      let value = source()
-      self.state = .acquired(value)
+    switch self.value {
+    case .some(let value):
       return value
-    case .acquired(let value):
+    case .none:
+      let value = self.valueSource()
+      self.value = .some(value)
       return value
     }
   }
   
   @usableFromInline
   internal required init(value: @autoclosure @escaping  ValueSource) {
-    self.state = .pending(value)
+    self.valueSource = value
   }
   
 }

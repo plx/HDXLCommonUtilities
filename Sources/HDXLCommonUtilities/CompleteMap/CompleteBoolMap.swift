@@ -17,12 +17,26 @@ public struct CompleteBoolMap<Value> {
   /// The value associated with `false`.
   public var falseValue: Value
   
+  /// "Designated initializer" for `CompleteBoolMap`.
+  ///
+  /// - parameter trueValue: The value to be associated with `true`.
+  /// - parameter falseValue: The value to be associated with `false`.
+  ///
+  /// - returns: A map with the requested associations.
+  ///
   @inlinable
   public init(trueValue: Value, falseValue: Value) {
     self.trueValue = trueValue
     self.falseValue = falseValue
   }
-  
+
+  /// "Convenience initializer" for `CompleteBoolMap`.
+  ///
+  /// - parameter value: The common value associated with `true` *and* `false`.
+  ///
+  ///
+  /// - returns: A map with the requested associations.
+  ///
   @inlinable
   public init(value: Value) {
     self.init(
@@ -42,6 +56,11 @@ extension CompleteBoolMap : Validatable {
   @inlinable
   public var isValid: Bool {
     get {
+      guard
+        isValidOrIndifferent(self.trueValue),
+        isValidOrIndifferent(self.falseValue) else {
+          return false
+      }
       return true
     }
   }
@@ -132,11 +151,13 @@ extension CompleteBoolMap : CompleteMap {
   
   @inlinable
   public subscript(key: Key) -> Value {
-    switch key {
-    case true:
-      return self.trueValue
-    case false:
-      return self.falseValue
+    get {
+      switch key {
+      case true:
+        return self.trueValue
+      case false:
+        return self.falseValue
+      }
     }
   }
   
