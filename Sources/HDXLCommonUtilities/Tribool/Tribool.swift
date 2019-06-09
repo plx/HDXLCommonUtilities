@@ -398,12 +398,12 @@ public extension Tribool {
       return .yes
     case (_, .yes):
       return .yes
-    case (.no, _):
-      return .no
-    case (_, .no):
-      return .no
-    default:
+    case (.indefinite,_):
       return .indefinite
+    case (_,.indefinite):
+      return .indefinite
+    case (.no, .no):
+      return .no
     }
   }
   
@@ -416,12 +416,12 @@ public extension Tribool {
       lhs = .yes
     case (_, .yes):
       lhs = .yes
-    case (.no, _):
-      lhs = .no
-    case (_, .no):
-      lhs = .no
-    default:
+    case (.indefinite, _):
       lhs = .indefinite
+    case (_, .indefinite):
+      lhs = .indefinite
+    case (.no, .no):
+      lhs = .no
     }
   }
 
