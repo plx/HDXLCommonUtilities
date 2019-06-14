@@ -5,6 +5,35 @@
 import Foundation
 
 // ----------------------------------------------------------------------- //
+// MARK: BinaryFloatingPoint - Non-Zero
+// ----------------------------------------------------------------------- //
+
+public extension BinaryFloatingPoint {
+  
+  /// Check if `self` is `!= 0.0`
+  @inlinable
+  var isNonZero: Bool {
+    get {
+      return !self.isZero
+    }
+  }
+  
+  /// Check if `self` is finite and `!= 0.0`
+  @inlinable
+  var isFiniteNonZero: Bool {
+    get {
+      guard
+        self.isFinite,
+        self.isNonZero else {
+          return false
+      }
+      return true
+    }
+  }
+  
+}
+
+// ----------------------------------------------------------------------- //
 // MARK: BinaryFloatingPoint - Non-Negative
 // ----------------------------------------------------------------------- //
 
