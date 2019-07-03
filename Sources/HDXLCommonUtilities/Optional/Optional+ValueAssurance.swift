@@ -19,6 +19,7 @@ public extension Optional {
   ///
   /// - note: I'd consider an operator calling this *if* I had a good operator in mind, but nothing I can think of seems like a great choice right now.
   ///
+  @inlinable
   mutating func obtainAssuredValue(
     fallingBackUpon assurance: @autoclosure () -> Wrapped) -> Wrapped {
     switch self {
