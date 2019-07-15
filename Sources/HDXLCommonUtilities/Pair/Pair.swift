@@ -139,6 +139,8 @@ extension Pair : CustomDebugStringConvertible {
 // -------------------------------------------------------------------------- //
 
 extension Pair : Codable where A:Codable, B:Codable {
+ 
+  // synthesized ok
   
 }
 
@@ -195,6 +197,7 @@ public extension Pair {
 public extension Pair {
 
   /// Acceses content as a raw tuple.
+  @inlinable
   var tupleRepresentation: (A,B) {
     get {
       return (self.a,self.b)

@@ -10,7 +10,6 @@ public extension Optional {
   /// except that if `fallback` is used we set `self = .some(fallback)` before
   /// returning `fallback`.
   ///
-  ///
   /// - parameter assurance: A lazily-evaluated autoclosure used to provide the fallback value if needed.
   ///
   /// - returns: Either the pre-existing wrapped value or the fallback value provided-by "assurance".
