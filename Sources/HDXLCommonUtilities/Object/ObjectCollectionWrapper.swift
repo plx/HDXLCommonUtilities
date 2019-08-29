@@ -58,7 +58,7 @@ public struct ObjectCollectionWrapper<Element,WrappedCollection>
 
 extension ObjectCollectionWrapper {
   
-  @usableFromInline
+  @inlinable
   internal func wrappedElements<S>(from elements: S) -> OnDemandDirectMap<S,WrappedElement>
     where S:Sequence, S.Element == Element {
     return elements.directlyMappedOnDemand() {
@@ -679,12 +679,12 @@ public struct ObjectCollectionWrapperIndex<Element,WrappedCollection>
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }
 
-  @usableFromInline
+  @inlinable
   internal init?(storage: Storage?) {
     guard let concreteStorage = storage else {
       return nil

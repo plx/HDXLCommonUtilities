@@ -100,7 +100,7 @@ internal final class SumChain9CollectionStorage<
   // MARK: Cache-Management
   // ------------------------------------------------------------------------ //
   
-  @usableFromInline
+  @inlinable
   internal func resetCaches() {
     self._isEmpty = nil
     self._count = nil
@@ -126,7 +126,7 @@ internal final class SumChain9CollectionStorage<
   @usableFromInline
   var _isEmpty: Bool? = nil
   
-  @usableFromInline
+  @inlinable
   var isEmpty: Bool {
     get {
       return self._isEmpty.obtainAssuredValue(
@@ -135,7 +135,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
   
-  @usableFromInline
+  @inlinable
   func calculateIsEmpty() -> Bool {
     return (
       self.a.isEmpty
@@ -165,7 +165,7 @@ internal final class SumChain9CollectionStorage<
   @usableFromInline
   var _count: Int? = nil
   
-  @usableFromInline
+  @inlinable
   var count: Int {
     get {
       return self._count.obtainAssuredValue(
@@ -235,7 +235,7 @@ internal final class SumChain9CollectionStorage<
   // MARK: Incremental Range Support - Access
   // ------------------------------------------------------------------------ //
   
-  @usableFromInline
+  @inlinable
   var rangeForA: Range<Int> {
     get {
       return self._rangeForA.obtainAssuredValue(
@@ -244,7 +244,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForB: Range<Int> {
     get {
       return self._rangeForB.obtainAssuredValue(
@@ -253,7 +253,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForC: Range<Int> {
     get {
       return self._rangeForC.obtainAssuredValue(
@@ -262,7 +262,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForD: Range<Int> {
     get {
       return self._rangeForD.obtainAssuredValue(
@@ -271,7 +271,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForE: Range<Int> {
     get {
       return self._rangeForE.obtainAssuredValue(
@@ -280,7 +280,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForF: Range<Int> {
     get {
       return self._rangeForF.obtainAssuredValue(
@@ -289,7 +289,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForG: Range<Int> {
     get {
       return self._rangeForG.obtainAssuredValue(
@@ -298,7 +298,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForH: Range<Int> {
     get {
       return self._rangeForH.obtainAssuredValue(
@@ -307,7 +307,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var rangeForI: Range<Int> {
     get {
       return self._rangeForI.obtainAssuredValue(
@@ -432,7 +432,7 @@ internal final class SumChain9CollectionStorage<
   // MARK: Extremal Position Support - Access
   // ------------------------------------------------------------------------ //
 
-  @usableFromInline
+  @inlinable
   var firstPosition: Position? {
     get {
       return self._firstPosition.obtainAssuredValue(
@@ -441,7 +441,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
 
-  @usableFromInline
+  @inlinable
   var finalPosition: Position? {
     get {
       return self._finalPosition.obtainAssuredValue(
@@ -490,7 +490,7 @@ internal final class SumChain9CollectionStorage<
   // MARK: Extremal Indices
   // ------------------------------------------------------------------------ //
 
-  @usableFromInline
+  @inlinable
   var startIndex: Index {
     get {
       guard let firstPosition = self.firstPosition else {
@@ -500,7 +500,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
   
-  @usableFromInline
+  @inlinable
   var endIndex: Index {
     get {
       return Index.endIndex
@@ -511,7 +511,7 @@ internal final class SumChain9CollectionStorage<
   // MARK: Initialization
   // ------------------------------------------------------------------------ //
   
-  @usableFromInline
+  @inlinable
   required init(
     _ a: A,
     _ b: B,
@@ -550,7 +550,7 @@ internal final class SumChain9CollectionStorage<
     I.Element
   >
   
-  @usableFromInline
+  @inlinable
   subscript(position: Position) -> Element {
     get {
       switch position {
@@ -635,7 +635,7 @@ internal final class SumChain9CollectionStorage<
     }
   }
   
-  @usableFromInline
+  @inlinable
   func position(
     _ position: Position,
     offsetBy distance: Int) -> Position? {
@@ -652,7 +652,7 @@ internal final class SumChain9CollectionStorage<
     )
   }
   
-  @usableFromInline
+  @inlinable
   func distance(
     from start: Position,
     to end: Position) -> Int {
@@ -671,21 +671,21 @@ internal final class SumChain9CollectionStorage<
 
 internal extension SumChain9CollectionStorage {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "SumChain9CollectionStorage"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return [
@@ -702,7 +702,7 @@ internal extension SumChain9CollectionStorage {
     }
   }
 
-  @usableFromInline
+  @inlinable
   var parameterDescriptions: String {
     get {
       return [
@@ -720,7 +720,7 @@ internal extension SumChain9CollectionStorage {
     }
   }
 
-  @usableFromInline
+  @inlinable
   var parameterDebugDescriptions: String {
     get {
       return [
@@ -871,7 +871,7 @@ internal extension SumChain9CollectionStorage {
     return nil
   }
   
-  @usableFromInline
+  @inlinable
   func firstPosition(after position: Arity9Position) -> Position? {
     switch position {
     case .a:
@@ -903,7 +903,7 @@ internal extension SumChain9CollectionStorage {
 
 internal extension SumChain9CollectionStorage {
   
-  @usableFromInline
+  @inlinable
   func position(forLinearPosition linearPosition: Int) -> Position {
     if self.rangeForA.contains(linearPosition) {
       return .a(
@@ -973,7 +973,7 @@ internal extension SumChain9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   func linearPosition(forPosition position: Position) -> Int {
     switch position {
     case .a(let a):
@@ -1270,7 +1270,7 @@ internal extension SumChain9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func finalPosition(before position: Arity9Position) -> Position? {
     switch position {
     case .a:
@@ -1305,7 +1305,7 @@ internal extension SumChain9CollectionStorage {
   
   // TODO: any way to pull the cached properties over for the unchanged properties?
   
-  @usableFromInline
+  @inlinable
   func with(a: A) -> SumChain9CollectionStorage<A,B,C,D,E,F,G,H,I> {
     return SumChain9CollectionStorage<A,B,C,D,E,F,G,H,I>(
       a,
@@ -1448,7 +1448,7 @@ internal extension SumChain9CollectionStorage {
 
 extension SumChain9CollectionStorage : Validatable {
   
-  @usableFromInline
+  @inlinable
   internal var isValid: Bool {
     get {
       guard
@@ -1485,7 +1485,7 @@ extension SumChain9CollectionStorage : Equatable
   H:Equatable,
   I:Equatable {
   
-  @usableFromInline
+  @inlinable
   internal static func ==(
     lhs: SumChain9CollectionStorage<A,B,C,D,E,F,G,H,I>,
     rhs: SumChain9CollectionStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -1511,7 +1511,7 @@ extension SumChain9CollectionStorage : Equatable
     return true
   }
   
-  @usableFromInline
+  @inlinable
   internal static func !=(
     lhs: SumChain9CollectionStorage<A,B,C,D,E,F,G,H,I>,
     rhs: SumChain9CollectionStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -1555,7 +1555,7 @@ extension SumChain9CollectionStorage : Hashable
   H:Hashable,
   I:Hashable {
   
-  @usableFromInline
+  @inlinable
   internal func hash(into hasher: inout Hasher) {
     self.a.hash(into: &hasher)
     self.b.hash(into: &hasher)
@@ -1576,7 +1576,7 @@ extension SumChain9CollectionStorage : Hashable
 
 extension SumChain9CollectionStorage : CustomStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var description: String {
     get {
       return "( \(self.parameterDescriptions) )"
@@ -1591,7 +1591,7 @@ extension SumChain9CollectionStorage : CustomStringConvertible {
 
 extension SumChain9CollectionStorage : CustomDebugStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var debugDescription: String {
     get {
       return "\(type(of: self).completeTypeName)(\(self.parameterDebugDescriptions)"
@@ -1629,7 +1629,7 @@ extension SumChain9CollectionStorage : Codable
     case h = "h"
     case i = "i"
     
-    @usableFromInline
+    @inlinable
     internal var intValue: Int? {
       get {
         switch self {
@@ -1655,7 +1655,7 @@ extension SumChain9CollectionStorage : Codable
       }
     }
     
-    @usableFromInline
+    @inlinable
     internal init?(intValue: Int) {
       switch intValue {
       case 0:
@@ -1683,7 +1683,7 @@ extension SumChain9CollectionStorage : Codable
     
   }
   
-  @usableFromInline
+  @inlinable
   internal func encode(to encoder: Encoder) throws {
     var values = encoder.container(keyedBy: CodingKeys.self)
     try values.encode(
@@ -1724,7 +1724,7 @@ extension SumChain9CollectionStorage : Codable
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal convenience init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     self.init(

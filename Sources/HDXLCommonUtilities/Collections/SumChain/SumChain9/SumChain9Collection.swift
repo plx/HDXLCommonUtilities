@@ -26,7 +26,7 @@ public struct SumChain9Collection<
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     // /////////////////////////////////////////////////////////////////////////
     pedantic_assert(storage.isValid)
@@ -266,21 +266,21 @@ public extension SumChain9Collection {
 
 internal extension SumChain9Collection {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "SumChain9Collection"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return [
@@ -297,7 +297,7 @@ internal extension SumChain9Collection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDescriptions: String {
     get {
       return [
@@ -315,7 +315,7 @@ internal extension SumChain9Collection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDebugDescriptions: String {
     get {
       return [
@@ -522,7 +522,7 @@ extension SumChain9Collection : Collection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal func linearIndex(forIndex index: Index) -> Int {
     switch index.storage {
     case .position(let position):
@@ -532,7 +532,7 @@ extension SumChain9Collection : Collection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal func index(forLinearIndex linearIndex: Int) -> Index {
     guard (0...self.count).contains(linearIndex) else {
       preconditionFailure("Attempted to convert invalid linearIndex \(linearIndex) to index in \(String(reflecting: self))!")

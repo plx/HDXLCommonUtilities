@@ -12,7 +12,7 @@ internal extension Chain9CollectionStorage
   where
   A.Element: Equatable {
   
-  @usableFromInline
+  @inlinable
   func contains(_ element: Element) -> Bool {
     return (
       self.a.contains(element)
@@ -45,7 +45,7 @@ internal extension Chain9CollectionStorage
   where
   A.Element: Comparable {
   
-  @usableFromInline
+  @inlinable
   func min() -> Element? {
     return weakMinimum(
       self.a.min(),
@@ -60,7 +60,7 @@ internal extension Chain9CollectionStorage
     )
   }
   
-  @usableFromInline
+  @inlinable
   func max() -> Element? {
     return weakMaximum(
       self.a.max(),

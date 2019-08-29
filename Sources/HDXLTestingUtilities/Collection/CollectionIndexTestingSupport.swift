@@ -5,7 +5,7 @@
 import Foundation
 import XCTest
 
-@inlinable
+@inlinable @inline(__always)
 public func HDXLAssertCollectionIndexSanity<C:Collection>(_ collection: C) {
   
   // validate start/end ordering is consistent:
@@ -37,41 +37,42 @@ public func HDXLAssertCollectionIndexSanity<C:Collection>(_ collection: C) {
   // TODO: chain2 to tack on the `endIndex` and run again
 
   // validate `collection.indices` contains only *subscriptable* indices:
-  for index in collection.indices {
+  for (lLocation,lIndex) in collection.indices.enumerated() {
     XCTAssertGreaterThanOrEqual(
-      index,
+      lIndex,
       collection.startIndex,
-      "`collection.indices` should only contain *subscriptable* indices, but \(String(reflecting: collection)).indices (\(String(reflecting: collection.indices))) contained non-subscriptable index \(String(reflecting: index))!"
+      "`collection.indices` should only contain *subscriptable* indices, but \(String(reflecting: collection)).indices (\(String(reflecting: collection.indices))) contained non-subscriptable index \(String(reflecting: lIndex))!"
     )
     XCTAssertLessThan(
-      index,
+      lIndex,
       collection.endIndex,
-      "`collection.indices` should only contain *subscriptable* indices, but \(String(reflecting: collection)).indices (\(String(reflecting: collection.indices))) contained non-subscriptable index \(String(reflecting: index))!"
+      "`collection.indices` should only contain *subscriptable* indices, but \(String(reflecting: collection)).indices (\(String(reflecting: collection.indices))) contained non-subscriptable index \(String(reflecting: lIndex))!"
     )
-  }
-
-  // validate round-trip index => distance-from-start => index
-  for index in collection.indices {
     let distanceFromStart = collection.distance(
       from: collection.startIndex,
-      to: index
+      to: lIndex
     )
     let indexAtDistance = collection.index(
       collection.startIndex,
       offsetBy: distanceFromStart
     )
     XCTAssertEqual(
-      index,
+      lIndex,
       indexAtDistance,
-      "Failed to round-trip index \(String(reflecting: index)) via distance-from-start \(distanceFromStart); arrived at \(indexAtDistance)!"
+      "Failed to round-trip index \(String(reflecting: lIndex)) via distance-from-start \(distanceFromStart); arrived at \(indexAtDistance)!"
     )
-  }
-  
-  // validate distances:
-  for (lLocation,lIndex) in collection.indices.enumerated() {
-    // still n^2 but making fewer visits this way:
-    for (_rLocation,rIndex) in collection.indices[lIndex..<collection.endIndex].enumerated() {
-      let rLocation = lLocation + _rLocation
+
+    let next = collection.index(after: lIndex)
+    XCTAssertEqual(
+      collection.distance(
+        from: lIndex,
+        to: next
+      ),
+      1,
+      "`collection.index(after:)` should advance by one, but went from \(String(reflecting: lIndex)) to \(String(reflecting: next)) w/ distance \(collection.distance(from: lIndex, to: next))"
+    )
+    for (_rLocation,rIndex) in collection.indices[next..<collection.endIndex].enumerated() {
+      let rLocation = lLocation + _rLocation + 1
       XCTAssertEqual(
         collection.distance(
           from: lIndex,
@@ -92,19 +93,7 @@ public func HDXLAssertCollectionIndexSanity<C:Collection>(_ collection: C) {
         "Found distance-mismatch between \(String(reflecting: lIndex)) and \(String(reflecting: rIndex)): should-be \(rLocation - lLocation) but got \(collection.distance(from: lIndex, to: rIndex))!"
       )
     }
-  }
-  
-  // validate forward iteration:
-  for index in collection.indices {
-    let next = collection.index(after: index)
-    XCTAssertEqual(
-      collection.distance(
-        from: index,
-        to: next
-      ),
-      1,
-      "`collection.index(after:)` should advance by one, but went from \(String(reflecting: index)) to \(String(reflecting: next)) w/ distance \(collection.distance(from: index, to: next))"
-    )
+
   }
   
 }

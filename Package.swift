@@ -51,6 +51,9 @@ let package = Package(
         "HDXLTestingUtilities"
       ]
     )
+  ],
+  swiftLanguageVersions: [
+    SwiftVersion.version("5.1")
   ]
 )
 

@@ -48,28 +48,28 @@ class ObjectWrapperTests: XCTestCase {
     let wrappedOther2 = ObjectWrapper(wrappedObject: other2)
     
     XCTAssertNotEqual(
-      first1,
-      other1
+      wrappedFirst1,
+      wrappedOther1
     )
     XCTAssertNotEqual(
-      first1,
-      first2
+      wrappedFirst1,
+      wrappedFirst2
     )
     XCTAssertNotEqual(
-      first1,
-      other2
+      wrappedFirst1,
+      wrappedOther2
     )
     XCTAssertNotEqual(
-      other1,
-      first2
+      wrappedOther1,
+      wrappedFirst2
     )
     XCTAssertNotEqual(
-      other1,
-      other2
+      wrappedOther1,
+      wrappedOther2
     )
     XCTAssertNotEqual(
-      first2,
-      other2
+      wrappedFirst2,
+      wrappedOther2
     )
     
     XCTAssertEqual(

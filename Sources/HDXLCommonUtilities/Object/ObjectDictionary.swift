@@ -26,7 +26,7 @@ public struct ObjectDictionary<Key:AnyObject,Value:AnyObject> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }
@@ -622,12 +622,12 @@ public struct ObjectDictionaryIndex<Key:AnyObject,Value:AnyObject> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   init(storage: Storage) {
     self.storage = storage
   }
 
-  @usableFromInline
+  @inlinable
   init?(storage: Storage?) {
     guard let concreteStorage = storage else {
       return nil
@@ -753,7 +753,7 @@ public struct ObjectDictionaryKeys<Key:AnyObject,Value:AnyObject> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }
@@ -921,7 +921,7 @@ public struct ObjectDictionaryValues<Key:AnyObject,Value:AnyObject> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }

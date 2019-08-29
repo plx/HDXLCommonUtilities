@@ -10,7 +10,7 @@ public extension Collection {
   /// Obtain the count by iterating from start-to-finish.
   ///
   /// - note: Motivated by collections with (a) complex iteration logic but (b) easily-calculable counts; easy to get the right calculation but wrong iteration!
-  @inlinable
+  @inlinable @inline(__always)
   func countByIterating() -> Int {
     var count = 0
     for _ in self {
@@ -22,7 +22,7 @@ public extension Collection {
 }
 
 /// Function tests basic invariants of `Collection` (like `isEmpty <=> count == 0`, etc..).
-@inlinable
+@inlinable @inline(__always)
 public func HDXLAssertCollectionBasicSanity<C:Collection>(_ collection: C) {
   
   // non-negative count:

@@ -13,7 +13,7 @@ public struct Sum9View<A:View,B:View,C:View,D:View,E:View,F:View,G:View,H:View,I
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal func obtainStorageView() -> AnyView {
     switch self.storage {
     case .a(let view):

@@ -23,7 +23,7 @@ public struct ObjectSet<Element:AnyObject> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   init(storage: Storage) {
     self.storage = storage
   }
@@ -783,12 +783,12 @@ public struct ObjectSetIndex<Element:AnyObject> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }
 
-  @usableFromInline
+  @inlinable
   internal init?(storage: Storage?) {
     guard let concreteStorage = storage else {
       return nil

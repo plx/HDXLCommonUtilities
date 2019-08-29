@@ -47,7 +47,7 @@ public struct OnDemandDirectMap<Base:Sequence,Element> {
   @usableFromInline
   internal let mapping: (Base.Element) -> Element
   
-  @usableFromInline
+  @inlinable
   internal init(base: Base, mapping: @escaping (Base.Element) -> Element) {
     self.base = base
     self.mapping = mapping
@@ -95,7 +95,7 @@ public struct OnDemandDirectMapIterator<Base:Sequence,Element> : IteratorProtoco
   @usableFromInline
   let mapping: (BaseIterator.Element) -> Element
   
-  @usableFromInline
+  @inlinable
   internal init(source: Source) {
     self.baseIterator = source.base.makeIterator()
     self.mapping = source.mapping

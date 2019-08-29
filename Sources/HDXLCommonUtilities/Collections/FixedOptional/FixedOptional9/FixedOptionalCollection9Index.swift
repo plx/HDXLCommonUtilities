@@ -16,12 +16,12 @@ public struct FixedOptional9CollectionIndex {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }
   
-  @usableFromInline
+  @inlinable
   internal init(position: FixedOptional9CollectionPosition) {
     self.init(
       storage: Storage.position(position)
@@ -185,28 +185,28 @@ internal enum FixedOptional9CollectionPosition : UInt8 {
 
 extension FixedOptional9CollectionPosition : Comparable {
   
-  @usableFromInline
+  @inlinable
   internal static func <(
     lhs: FixedOptional9CollectionPosition,
     rhs: FixedOptional9CollectionPosition) -> Bool {
     return lhs.rawValue < rhs.rawValue
   }
 
-  @usableFromInline
+  @inlinable
   internal static func >(
     lhs: FixedOptional9CollectionPosition,
     rhs: FixedOptional9CollectionPosition) -> Bool {
     return lhs.rawValue > rhs.rawValue
   }
   
-  @usableFromInline
+  @inlinable
   internal static func <=(
     lhs: FixedOptional9CollectionPosition,
     rhs: FixedOptional9CollectionPosition) -> Bool {
     return lhs.rawValue <= rhs.rawValue
   }
 
-  @usableFromInline
+  @inlinable
   internal static func >=(
     lhs: FixedOptional9CollectionPosition,
     rhs: FixedOptional9CollectionPosition) -> Bool {
@@ -221,7 +221,7 @@ extension FixedOptional9CollectionPosition : Comparable {
 
 extension FixedOptional9CollectionPosition : Hashable {
   
-  @usableFromInline
+  @inlinable
   internal func hash(into hasher: inout Hasher) {
     self.rawValue.hash(into: &hasher)
   }
@@ -234,7 +234,7 @@ extension FixedOptional9CollectionPosition : Hashable {
 
 extension FixedOptional9CollectionPosition : CustomStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var description: String {
     get {
       switch self {
@@ -268,7 +268,7 @@ extension FixedOptional9CollectionPosition : CustomStringConvertible {
 
 extension FixedOptional9CollectionPosition : CustomDebugStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var debugDescription: String {
     get {
       switch self {
@@ -338,7 +338,7 @@ internal enum FixedOptional9CollectionIndexStorage {
 
 extension FixedOptional9CollectionIndexStorage : Equatable {
   
-  @usableFromInline
+  @inlinable
   internal static func ==(
     lhs: FixedOptional9CollectionIndexStorage,
     rhs: FixedOptional9CollectionIndexStorage) -> Bool {
@@ -354,7 +354,7 @@ extension FixedOptional9CollectionIndexStorage : Equatable {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal static func !=(
     lhs: FixedOptional9CollectionIndexStorage,
     rhs: FixedOptional9CollectionIndexStorage) -> Bool {
@@ -378,7 +378,7 @@ extension FixedOptional9CollectionIndexStorage : Equatable {
 
 extension FixedOptional9CollectionIndexStorage : Comparable {
   
-  @usableFromInline
+  @inlinable
   internal static func <(
     lhs: FixedOptional9CollectionIndexStorage,
     rhs: FixedOptional9CollectionIndexStorage) -> Bool {
@@ -394,7 +394,7 @@ extension FixedOptional9CollectionIndexStorage : Comparable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func >(
     lhs: FixedOptional9CollectionIndexStorage,
     rhs: FixedOptional9CollectionIndexStorage) -> Bool {
@@ -410,7 +410,7 @@ extension FixedOptional9CollectionIndexStorage : Comparable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func <=(
     lhs: FixedOptional9CollectionIndexStorage,
     rhs: FixedOptional9CollectionIndexStorage) -> Bool {
@@ -426,7 +426,7 @@ extension FixedOptional9CollectionIndexStorage : Comparable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func >=(
     lhs: FixedOptional9CollectionIndexStorage,
     rhs: FixedOptional9CollectionIndexStorage) -> Bool {
@@ -451,7 +451,7 @@ extension FixedOptional9CollectionIndexStorage : Comparable {
 extension FixedOptional9CollectionIndexStorage : Hashable {
   
   // synthesized ok? don't want to deal with the endIndex/position stuff for once
-  @usableFromInline
+  @inlinable
   internal func hash(into hasher: inout Hasher) {
     switch self {
     case .position(let position):
@@ -470,7 +470,7 @@ extension FixedOptional9CollectionIndexStorage : Hashable {
 
 extension FixedOptional9CollectionIndexStorage : CustomStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var description: String {
     get {
       switch self {
@@ -490,7 +490,7 @@ extension FixedOptional9CollectionIndexStorage : CustomStringConvertible {
 
 extension FixedOptional9CollectionIndexStorage : CustomDebugStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var debugDescription: String {
     get {
       switch self {

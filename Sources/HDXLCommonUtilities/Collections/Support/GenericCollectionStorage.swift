@@ -8,22 +8,32 @@ import Foundation
 @propertyWrapper
 internal struct GenericCollectionStorage<C:Collection> {
   
-  @usableFromInline
-  mutating func resetCaches() {
+  @inlinable
+  internal var projectedValue: GenericCollectionStorage<C> {
+    get {
+      return self
+    }
+    set {
+      self = newValue
+    }
+  }
+  
+  @inlinable
+  internal mutating func resetCaches() {
     self._count = nil
     self._firstSubscriptableIndex = nil
     self._finalSubscriptableIndex = nil
   }
   
-  @usableFromInline
-  mutating func fullyPopulateCaches() {
+  @inlinable
+  internal mutating func fullyPopulateCaches() {
     let _ = self.count
     let _ = self.firstSubscriptableIndex
     let _ = self.finalSubscriptableIndex
   }
   
-  @usableFromInline
-  var hasFullyPopulatedCaches: Bool {
+  @inlinable
+  internal var hasFullyPopulatedCaches: Bool {
     get {
       guard
         nil != self._count,
@@ -36,54 +46,62 @@ internal struct GenericCollectionStorage<C:Collection> {
   }
   
   @usableFromInline
-  var wrappedValue: C {
-    didSet {
+  internal var _wrappedValue: C
+  
+  @inlinable
+  internal var wrappedValue: C {
+    get {
+      return self._wrappedValue
+    }
+    set {
+      self._wrappedValue = newValue
+      self.resetCaches()
     }
   }
   
-  @usableFromInline
-  init(initialValue: C) {
-    self.wrappedValue = initialValue
+  @inlinable
+  internal init(wrappedValue: C) {
+    self._wrappedValue = wrappedValue
   }
   
   @usableFromInline
-  var _count: Int? = nil
+  internal var _count: Int? = nil
   
-  @usableFromInline
-  var count: Int {
+  @inlinable
+  internal var count: Int {
     mutating get {
       return self._count.obtainAssuredValue(
-        fallingBackUpon: self.wrappedValue.count
+        fallingBackUpon: self._wrappedValue.count
       )
     }
   }
   
   @usableFromInline
-  var _firstSubscriptableIndex: C.Index?? = nil
+  internal var _firstSubscriptableIndex: C.Index?? = nil
   
-  @usableFromInline
-  var firstSubscriptableIndex: C.Index? {
+  @inlinable
+  internal var firstSubscriptableIndex: C.Index? {
     mutating get {
       return self._firstSubscriptableIndex.obtainAssuredValue(
-        fallingBackUpon: self.wrappedValue.firstSubscriptableIndex
+        fallingBackUpon: self._wrappedValue.firstSubscriptableIndex
       )
     }
   }
   
   @usableFromInline
-  var _finalSubscriptableIndex: C.Index?? = nil
+  internal var _finalSubscriptableIndex: C.Index?? = nil
   
-  @usableFromInline
-  var finalSubscriptableIndex: C.Index? {
+  @inlinable
+  internal var finalSubscriptableIndex: C.Index? {
     mutating get {
       return self._finalSubscriptableIndex.obtainAssuredValue(
-        fallingBackUpon: self.wrappedValue.finalSubscriptableIndex
+        fallingBackUpon: self._wrappedValue.finalSubscriptableIndex
       )
     }
   }
   
   @usableFromInline
-  var subscriptableIndexRange: ClosedRange<C.Index>? {
+  internal var subscriptableIndexRange: ClosedRange<C.Index>? {
     mutating get {
       guard
         let first = self.firstSubscriptableIndex,
@@ -94,22 +112,22 @@ internal struct GenericCollectionStorage<C:Collection> {
     }
   }
   
-  @usableFromInline
-  mutating func subscriptableIndex(after index: C.Index) -> C.Index? {
+  @inlinable
+  internal mutating func subscriptableIndex(after index: C.Index) -> C.Index? {
     guard
-      !self.wrappedValue.isEmpty,
+      !self._wrappedValue.isEmpty,
       let finalSubscriptableIndex = self.finalSubscriptableIndex,
       index < finalSubscriptableIndex else {
         return nil
     }
-    return self.wrappedValue.index(after: index)
+    return self._wrappedValue.index(after: index)
   }
   
-  @usableFromInline
-  mutating func nextSubscriptableIndex(
+  @inlinable
+  internal mutating func nextSubscriptableIndex(
     after index: C.Index,
     updating context: inout ProductIndexAdvancementContext) -> C.Index {
-    assert(!self.wrappedValue.isEmpty)
+    assert(!self._wrappedValue.isEmpty)
     switch context {
     case .shouldHoldPosition:
       return index
@@ -127,17 +145,17 @@ internal struct GenericCollectionStorage<C:Collection> {
     }
   }
   
-  @usableFromInline
-  mutating func subscriptableIndex(
+  @inlinable
+  internal mutating func subscriptableIndex(
     _ index: C.Index,
     offsetBy distance: Int) -> C.Index? {
-    guard !self.wrappedValue.isEmpty else {
+    guard !self._wrappedValue.isEmpty else {
       return nil
     }
     if distance == 0 {
       return index
     } else if distance > 0, let finalSubscriptableIndex = self.finalSubscriptableIndex {
-      let destination = self.wrappedValue.index(
+      let destination = self._wrappedValue.index(
         index,
         offsetBy: distance
       )
@@ -146,7 +164,7 @@ internal struct GenericCollectionStorage<C:Collection> {
       }
       return destination
     } else if distance < 0, let firstSubscriptableIndex = self.firstSubscriptableIndex {
-      let destination = self.wrappedValue.index(
+      let destination = self._wrappedValue.index(
         index,
         offsetBy: distance
       )
@@ -163,22 +181,22 @@ internal struct GenericCollectionStorage<C:Collection> {
 
 extension GenericCollectionStorage where C:BidirectionalCollection {
   
-  @usableFromInline
-  mutating func subscriptableIndex(before index: C.Index) -> C.Index? {
+  @inlinable
+  internal mutating func subscriptableIndex(before index: C.Index) -> C.Index? {
     guard
-      !self.wrappedValue.isEmpty,
+      !self._wrappedValue.isEmpty,
       let firstSubscriptableIndex = self.firstSubscriptableIndex,
       firstSubscriptableIndex < index  else {
         return nil
     }
-    return self.wrappedValue.index(before: index)
+    return self._wrappedValue.index(before: index)
   }
   
-  @usableFromInline
-  mutating func previousSubscriptableIndex(
+  @inlinable
+  internal mutating func previousSubscriptableIndex(
     before index: C.Index,
     updating context: inout ProductIndexRetreatContext) -> C.Index {
-    assert(!self.wrappedValue.isEmpty)
+    assert(!self._wrappedValue.isEmpty)
     switch context {
     case .shouldHoldPosition:
       return index
@@ -200,17 +218,17 @@ extension GenericCollectionStorage where C:BidirectionalCollection {
 
 extension GenericCollectionStorage : Codable where C:Codable {
   
-  @usableFromInline
+  @inlinable
   internal func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
-    try container.encode(self.wrappedValue)
+    try container.encode(self._wrappedValue)
   }
   
-  @usableFromInline
+  @inlinable
   internal init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     self.init(
-      initialValue: try container.decode(C.self)
+      wrappedValue: try container.decode(C.self)
     )
   }
   

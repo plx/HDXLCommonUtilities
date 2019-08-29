@@ -67,6 +67,8 @@ public struct OrderedPair<T:Comparable> {
 
 public extension OrderedPair {
   
+  /// Returns an ordered pair that "fuses" `self` and `pair`, using the minimum
+  /// and maximum between the components of `self` and `pair`.
   @inlinable
   func incorporating(pair other: OrderedPair<T>) -> OrderedPair<T> {
     // /////////////////////////////////////////////////////////////////////////
@@ -79,6 +81,9 @@ public extension OrderedPair {
     )
   }
 
+  /// Returns an ordered pair that "fuses" `self` and `pair`, using the minimum
+  /// and maximum between the components of `self` and `pair`; returns `self`,
+  /// however, whenever `pair` is nil.
   @inlinable
   func incorporating(pair other: OrderedPair<T>?) -> OrderedPair<T> {
     // /////////////////////////////////////////////////////////////////////////
@@ -92,6 +97,9 @@ public extension OrderedPair {
     )
   }
 
+  /// Returns a value derived from `self` by "incorporating" `value`: if `value`
+  /// is less-than `self.lesser` the result will use `value` as `lesser`, and
+  /// similarly when `value > greater`.
   @inlinable
   func incorporating(value: T) -> OrderedPair<T> {
     // /////////////////////////////////////////////////////////////////////////
@@ -103,6 +111,9 @@ public extension OrderedPair {
     )
   }
 
+  /// Returns a value derived from `self` by "incorporating" `value`: if `value`
+  /// is less-than `self.lesser` the result will use `value` as `lesser`, and
+  /// similarly when `value > greater`; when `value` is `nil`, `self` is returned as-is.
   @inlinable
   func incorporating(value: T?) -> OrderedPair<T> {
     // /////////////////////////////////////////////////////////////////////////
@@ -116,6 +127,7 @@ public extension OrderedPair {
     )
   }
 
+  /// In-place modifies `self` by incorporating values from `other`.
   @inlinable
   mutating func formIncorporation(of other: OrderedPair<T>) {
     // /////////////////////////////////////////////////////////////////////////
@@ -127,6 +139,8 @@ public extension OrderedPair {
     self.greater = max(self.greater, other.greater)
   }
 
+  /// In-place modifies `self` by incorporating values from `other`; a no-op
+  /// whenever `value` is `nil`.
   @inlinable
   mutating func formIncorporation(of other: OrderedPair<T>?) {
     // /////////////////////////////////////////////////////////////////////////
@@ -138,6 +152,7 @@ public extension OrderedPair {
     }
   }
   
+  /// In-place modifies `self` by incorporating `value`.
   @inlinable
   mutating func formIncorporation(of value: T) {
     // /////////////////////////////////////////////////////////////////////////
@@ -148,6 +163,7 @@ public extension OrderedPair {
     self.greater = max(self.greater, value)
   }
 
+  /// In-place modifies `self` by incorporating `value`; a no-op whenever `value` is `nil`.
   @inlinable
   mutating func formIncorporation(of value: T?) {
     // /////////////////////////////////////////////////////////////////////////
@@ -275,3 +291,6 @@ extension OrderedPair : Codable where T:Codable {
   // synthesized ok
   
 }
+
+// could do `CaseIterable` but will wait until either `some` is more-featureful
+// or I happen to specifically need that, for this

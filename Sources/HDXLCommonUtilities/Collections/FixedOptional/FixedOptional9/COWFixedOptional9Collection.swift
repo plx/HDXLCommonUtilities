@@ -16,7 +16,7 @@ public struct COWFixedOptional9Collection<Element> {
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     self.storage = storage
   }
@@ -207,28 +207,28 @@ public extension COWFixedOptional9Collection {
 
 internal extension COWFixedOptional9Collection {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "COWFixedOptional9Collection"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return String(reflecting: Element.self)
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDescriptions: String {
     get {
       return [
@@ -246,7 +246,7 @@ internal extension COWFixedOptional9Collection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDebugDescriptions: String {
     get {
       return [
@@ -485,12 +485,12 @@ internal final class COWFixedOptional9CollectionStorage<Element> {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal required init(storage: Storage) {
     self.storage = storage
   }
   
-  @usableFromInline
+  @inlinable
   internal convenience init(
     _ a: Element?,
     _ b: Element?,
@@ -520,7 +520,7 @@ internal final class COWFixedOptional9CollectionStorage<Element> {
   // MARK: Cache Property Management
   // ------------------------------------------------------------------------ //
   
-  @usableFromInline
+  @inlinable
   internal func resetCaches() {
     self._isEmpty = nil
     self._count = nil
@@ -544,7 +544,7 @@ internal final class COWFixedOptional9CollectionStorage<Element> {
   // MARK: Cache Property Access
   // ------------------------------------------------------------------------ //
   
-  @usableFromInline
+  @inlinable
   internal var isEmpty: Bool {
     get {
       return self._isEmpty.obtainAssuredValue(
@@ -553,7 +553,7 @@ internal final class COWFixedOptional9CollectionStorage<Element> {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal var count: Int {
     get {
       return self._count.obtainAssuredValue(
@@ -562,7 +562,7 @@ internal final class COWFixedOptional9CollectionStorage<Element> {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal var startIndex: Index {
     get {
       return self._startIndex.obtainAssuredValue(
@@ -579,28 +579,28 @@ internal final class COWFixedOptional9CollectionStorage<Element> {
 
 internal extension COWFixedOptional9CollectionStorage {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "COWFixedOptional9CollectionStorage"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return String(reflecting: Element.self)
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDescriptions: String {
     get {
       return [
@@ -618,7 +618,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDebugDescriptions: String {
     get {
       return [
@@ -644,7 +644,7 @@ internal extension COWFixedOptional9CollectionStorage {
 
 internal extension COWFixedOptional9CollectionStorage {
   
-  @usableFromInline
+  @inlinable
   var a: Element? {
     get {
       return self.storage.a
@@ -654,7 +654,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var b: Element? {
     get {
       return self.storage.b
@@ -664,7 +664,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var c: Element? {
     get {
       return self.storage.c
@@ -674,7 +674,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var d: Element? {
     get {
       return self.storage.d
@@ -684,7 +684,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var e: Element? {
     get {
       return self.storage.e
@@ -694,7 +694,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var f: Element? {
     get {
       return self.storage.f
@@ -704,7 +704,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var g: Element? {
     get {
       return self.storage.g
@@ -714,7 +714,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var h: Element? {
     get {
       return self.storage.h
@@ -724,7 +724,7 @@ internal extension COWFixedOptional9CollectionStorage {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var i: Element? {
     get {
       return self.storage.i
@@ -742,7 +742,7 @@ internal extension COWFixedOptional9CollectionStorage {
 
 internal extension COWFixedOptional9CollectionStorage {
   
-  @usableFromInline
+  @inlinable
   func with(a: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -757,7 +757,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(b: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -772,7 +772,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(c: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -787,7 +787,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(d: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -802,7 +802,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(e: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -817,7 +817,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(f: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -832,7 +832,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(g: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -847,7 +847,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(h: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -862,7 +862,7 @@ internal extension COWFixedOptional9CollectionStorage {
     )
   }
   
-  @usableFromInline
+  @inlinable
   func with(i: Element?) -> COWFixedOptional9CollectionStorage<Element> {
     return COWFixedOptional9CollectionStorage(
       a,
@@ -885,14 +885,14 @@ internal extension COWFixedOptional9CollectionStorage {
 
 extension COWFixedOptional9CollectionStorage : Equatable where Element:Equatable {
   
-  @usableFromInline
+  @inlinable
   internal static func ==(
     lhs: COWFixedOptional9CollectionStorage<Element>,
     rhs: COWFixedOptional9CollectionStorage<Element>) -> Bool {
     return lhs === rhs || lhs.storage == rhs.storage
   }
   
-  @usableFromInline
+  @inlinable
   internal static func !=(
     lhs: COWFixedOptional9CollectionStorage<Element>,
     rhs: COWFixedOptional9CollectionStorage<Element>) -> Bool {
@@ -907,7 +907,7 @@ extension COWFixedOptional9CollectionStorage : Equatable where Element:Equatable
 
 extension COWFixedOptional9CollectionStorage : Hashable where Element:Hashable {
   
-  @usableFromInline
+  @inlinable
   internal func hash(into hasher: inout Hasher) {
     self.storage.hash(into: &hasher)
   }
@@ -920,7 +920,7 @@ extension COWFixedOptional9CollectionStorage : Hashable where Element:Hashable {
 
 extension COWFixedOptional9CollectionStorage : CustomStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var description: String {
     get {
       return "(\(self.parameterDescriptions))"
@@ -935,7 +935,7 @@ extension COWFixedOptional9CollectionStorage : CustomStringConvertible {
 
 extension COWFixedOptional9CollectionStorage : CustomDebugStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var debugDescription: String {
     get {
       return "\(type(of: self).completeTypeName)(\(self.parameterDebugDescriptions))"
@@ -950,13 +950,13 @@ extension COWFixedOptional9CollectionStorage : CustomDebugStringConvertible {
 
 extension COWFixedOptional9CollectionStorage : Codable where Element:Codable {
   
-  @usableFromInline
+  @inlinable
   internal func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.storage)
   }
   
-  @usableFromInline
+  @inlinable
   internal convenience init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     self.init(
@@ -974,21 +974,21 @@ extension COWFixedOptional9CollectionStorage : Codable where Element:Codable {
 
 extension COWFixedOptional9CollectionStorage : RandomAccessCollection {
   
-  @usableFromInline
+  @inlinable
   internal var endIndex: Index {
     get {
       return self.storage.endIndex
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal subscript(index: Index) -> Element {
     get {
       return self.storage[index]
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal func distance(
     from start: Index,
     to end: Index) -> Int {
@@ -998,21 +998,21 @@ extension COWFixedOptional9CollectionStorage : RandomAccessCollection {
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal func index(after index: Index) -> Index {
     return self.storage.index(
       after: index
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal func index(before index: Index) -> Index {
     return self.storage.index(
       before: index
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal func index(
     _ index: Index,
     offsetBy distance: Int) -> Index {
@@ -1022,7 +1022,7 @@ extension COWFixedOptional9CollectionStorage : RandomAccessCollection {
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal func index(
     _ i: Index,
     offsetBy distance: Int,
@@ -1034,17 +1034,17 @@ extension COWFixedOptional9CollectionStorage : RandomAccessCollection {
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal func formIndex(after i: inout Index) {
     self.storage.formIndex(after: &i)
   }
   
-  @usableFromInline
+  @inlinable
   internal func formIndex(before i: inout Index) {
     self.storage.formIndex(before: &i)
   }
   
-  @usableFromInline
+  @inlinable
   internal func formIndex(
     _ i: inout Index,
     offsetBy distance: Int) {
@@ -1054,7 +1054,7 @@ extension COWFixedOptional9CollectionStorage : RandomAccessCollection {
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal func formIndex(
     _ i: inout FixedOptional9CollectionIndex,
     offsetBy distance: Int,

@@ -50,28 +50,28 @@ public struct InlineFixedOptional9Collection<Element> {
 
 internal extension InlineFixedOptional9Collection {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "InlineFixedOptional9Collection"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return String(reflecting: Element.self)
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDescriptions: String {
     get {
       return [
@@ -89,7 +89,7 @@ internal extension InlineFixedOptional9Collection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   var parameterDebugDescriptions: String {
     get {
       return [
@@ -409,7 +409,7 @@ extension InlineFixedOptional9Collection : RandomAccessCollection {
   @usableFromInline
   internal typealias Position = FixedOptional9CollectionPosition
   
-  @usableFromInline
+  @inlinable
   internal var firstSubscriptablePosition: Position? {
     get {
       // TODO: use indexed final non-nil
@@ -437,7 +437,7 @@ extension InlineFixedOptional9Collection : RandomAccessCollection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal var finalSubscriptablePosition: Position? {
     get {
       // TODO: use indexed final non-nil
@@ -465,7 +465,7 @@ extension InlineFixedOptional9Collection : RandomAccessCollection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal func subscriptablePosition(after position: Position) -> Position? {
     switch position {
     case .a:
@@ -513,7 +513,7 @@ extension InlineFixedOptional9Collection : RandomAccessCollection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal func subscriptablePosition(before position: Position) -> Position? {
     switch position {
     case .i:
@@ -580,7 +580,7 @@ extension InlineFixedOptional9Collection : RandomAccessCollection {
     }
   }
   
-  @usableFromInline
+  @inlinable
   internal subscript(position: Position) -> Element {
     get{
       switch position {

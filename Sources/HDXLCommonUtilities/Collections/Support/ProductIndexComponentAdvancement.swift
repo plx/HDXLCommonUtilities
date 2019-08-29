@@ -1,5 +1,0 @@
-//
-//  ProductIndexComponentAdvancement.swift
-//
-
-import Foundation

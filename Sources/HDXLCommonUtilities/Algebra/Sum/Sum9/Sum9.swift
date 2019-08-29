@@ -401,21 +401,21 @@ public extension Sum9 {
 
 internal extension Sum9 {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "Sum9"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return [

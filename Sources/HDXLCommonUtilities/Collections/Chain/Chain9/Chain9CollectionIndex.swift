@@ -28,7 +28,7 @@ public struct Chain9CollectionIndex<
   @usableFromInline
   internal var storage: Storage
   
-  @usableFromInline
+  @inlinable
   internal init(storage: Storage) {
     // /////////////////////////////////////////////////////////////////////////
     pedantic_assert(storage.isValid)
@@ -37,14 +37,14 @@ public struct Chain9CollectionIndex<
     self.storage = storage
   }
   
-  @usableFromInline
+  @inlinable
   internal init(position: Position) {
     self.init(
       storage: .position(position)
     )
   }
   
-  @usableFromInline
+  @inlinable
   internal static var endIndex: Chain9CollectionIndex<A,B,C,D,E,F,G,H,I> {
     get {
       return Chain9CollectionIndex<A,B,C,D,E,F,G,H,I>(
@@ -65,42 +65,42 @@ internal extension Chain9CollectionIndex {
     self.init(position: .a(a))
   }
 
-  @usableFromInline
+  @inlinable
   init(b: B.Index) {
     self.init(position: .b(b))
   }
 
-  @usableFromInline
+  @inlinable
   init(c: C.Index) {
     self.init(position: .c(c))
   }
 
-  @usableFromInline
+  @inlinable
   init(d: D.Index) {
     self.init(position: .d(d))
   }
 
-  @usableFromInline
+  @inlinable
   init(e: E.Index) {
     self.init(position: .e(e))
   }
 
-  @usableFromInline
+  @inlinable
   init(f: F.Index) {
     self.init(position: .f(f))
   }
 
-  @usableFromInline
+  @inlinable
   init(g: G.Index) {
     self.init(position: .g(g))
   }
 
-  @usableFromInline
+  @inlinable
   init(h: H.Index) {
     self.init(position: .h(h))
   }
 
-  @usableFromInline
+  @inlinable
   init(i: I.Index) {
     self.init(position: .i(i))
   }
@@ -113,21 +113,21 @@ internal extension Chain9CollectionIndex {
 
 internal extension Chain9CollectionIndex {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "Chain9CollectionIndex"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return [
@@ -303,21 +303,21 @@ internal enum Chain9CollectionIndexStorage<
 
 internal extension Chain9CollectionIndexStorage {
   
-  @usableFromInline
+  @inlinable
   static var shortTypeName: String {
     get {
       return "Chain9CollectionIndexStorage"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var completeTypeName: String {
     get {
       return "\(self.shortTypeName)<\(self.typeParameterNames)>"
     }
   }
   
-  @usableFromInline
+  @inlinable
   static var typeParameterNames: String {
     get {
       return [
@@ -342,7 +342,7 @@ internal extension Chain9CollectionIndexStorage {
 
 extension Chain9CollectionIndexStorage : Validatable {
   
-  @usableFromInline
+  @inlinable
   internal var isValid: Bool {
     get {
       switch self {
@@ -362,7 +362,7 @@ extension Chain9CollectionIndexStorage : Validatable {
 
 extension Chain9CollectionIndexStorage : Equatable {
   
-  @usableFromInline
+  @inlinable
   internal static func ==(
     lhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>,
     rhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -376,7 +376,7 @@ extension Chain9CollectionIndexStorage : Equatable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func !=(
     lhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>,
     rhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -398,7 +398,7 @@ extension Chain9CollectionIndexStorage : Equatable {
 
 extension Chain9CollectionIndexStorage : Comparable {
   
-  @usableFromInline
+  @inlinable
   internal static func <(
     lhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>,
     rhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -414,7 +414,7 @@ extension Chain9CollectionIndexStorage : Comparable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func >(
     lhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>,
     rhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -430,7 +430,7 @@ extension Chain9CollectionIndexStorage : Comparable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func <=(
     lhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>,
     rhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -446,7 +446,7 @@ extension Chain9CollectionIndexStorage : Comparable {
     }
   }
 
-  @usableFromInline
+  @inlinable
   internal static func >=(
     lhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>,
     rhs: Chain9CollectionIndexStorage<A,B,C,D,E,F,G,H,I>) -> Bool {
@@ -470,7 +470,7 @@ extension Chain9CollectionIndexStorage : Comparable {
 
 extension Chain9CollectionIndexStorage : CustomStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var description: String {
     get {
       switch self {
@@ -490,7 +490,7 @@ extension Chain9CollectionIndexStorage : CustomStringConvertible {
 
 extension Chain9CollectionIndexStorage : CustomDebugStringConvertible {
   
-  @usableFromInline
+  @inlinable
   internal var debugDescription: String {
     get {
       switch self {

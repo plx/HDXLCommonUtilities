@@ -20,7 +20,7 @@ internal extension SumChain9CollectionStorage
   H.Element: Equatable,
   I.Element: Equatable {
   
-  @usableFromInline
+  @inlinable
   func contains(_ element: Element) -> Bool {
     switch element {
     case .a(let a):

@@ -5,7 +5,7 @@
 import Foundation
 import XCTest
 
-@inlinable
+@inlinable @inline(__always)
 public func HDXLAssertCoherentOrdering<C:Collection>(forAscendingDistinctValues values: C)
   where C.Element: Comparable {
     for (lIndex,lValue) in values.enumerated() {
