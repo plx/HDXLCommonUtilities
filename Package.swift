@@ -45,6 +45,13 @@ let package = Package(
       ]
     ),
     .testTarget(
+      name: "HDXLTestingUtilitiesTests",
+      dependencies: [
+        "HDXLCommonUtilities",
+        "HDXLTestingUtilities"
+      ]
+    ),
+    .testTarget(
       name: "HDXLCollectionValidationTests",
       dependencies: [
         "HDXLCommonUtilities",
@@ -53,7 +60,7 @@ let package = Package(
     )
   ],
   swiftLanguageVersions: [
-    SwiftVersion.version("5.1")
+    SwiftVersion.v5
   ]
 )
 
