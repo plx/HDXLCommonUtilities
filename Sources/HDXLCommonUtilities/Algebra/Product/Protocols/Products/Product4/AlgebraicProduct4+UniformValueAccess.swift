@@ -232,9 +232,9 @@ public extension AlgebraicProduct4
   
   @inlinable
   mutating func formRightwardPush(byPrepending value: UniformValue) {
-    self.b = self.a
-    self.c = self.b
     self.d = self.c
+    self.c = self.b
+    self.b = self.a
     self.a = value
   }
 

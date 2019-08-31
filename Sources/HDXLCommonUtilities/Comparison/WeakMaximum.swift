@@ -18,7 +18,7 @@ public func weakMaximum<T:Comparable>(_ a: T?, _ b: T?) -> T? {
   case (.none, .some(let value)):
     return value
   case (.some(let aa), .some(let bb)):
-    return min(aa, bb)
+    return max(aa, bb)
   }
 }
 
