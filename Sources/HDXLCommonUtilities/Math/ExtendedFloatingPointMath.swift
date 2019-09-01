@@ -92,6 +92,13 @@ public extension ExtendedFloatingPointMath {
       by: power
     )
   }
+  
+  @inlinable
+  mutating func formExponentiation(by power: Self) {
+    self = self.exponentiated(
+      by: power
+    )
+  }
 
 }
 
