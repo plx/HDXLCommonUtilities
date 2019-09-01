@@ -32,7 +32,8 @@ import Foundation
 /// `sinf(x)` (after several levels of *compile-time* indirection).
 ///
 /// For now I'm just defining this in the obvious way and sticking it into my
-/// common utilities for ease of use elsewhere; of all the functionality within
+/// common utilities for e
+/// ase of use elsewhere; of all the functionality within
 /// this library, however, this is the best candidate for breaking my rules about
 /// things like `@inline(__always)` and even `@_transparent`--it's really important
 /// this protocol not introduce ridiculous overhead vis-a-vis what it actually does.
@@ -81,4 +82,18 @@ public protocol ExtendedFloatingPointMath : BinaryFloatingPoint {
   static func hyperbolicArctangent(of value: Self) -> Self
   
 }
+
+public extension ExtendedFloatingPointMath {
+  
+  @inlinable
+  func exponentiated(by power: Self) -> Self {
+    return Self.exponentiate(
+      self,
+      by: power
+    )
+  }
+
+}
+
+
 
