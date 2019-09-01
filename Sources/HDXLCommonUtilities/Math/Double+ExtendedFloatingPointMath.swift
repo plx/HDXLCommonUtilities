@@ -45,6 +45,13 @@ extension Double : ExtendedFloatingPointMath {
   }
   
   @inlinable
+  public static func exponentiate(
+    _ value: Double,
+    by exponent: Double) -> Double {
+    return pow(value,exponent)
+  }
+
+  @inlinable
   public static func exponentToThePower(of value: Double) -> Double {
     return exp(value)
   }

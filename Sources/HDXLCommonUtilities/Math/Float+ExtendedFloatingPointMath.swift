@@ -45,6 +45,13 @@ extension Float : ExtendedFloatingPointMath {
   }
   
   @inlinable
+  public static func exponentiate(
+    _ value: Float,
+    by exponent: Float) -> Float {
+    return powf(value,exponent)
+  }
+  
+  @inlinable
   public static func exponentToThePower(of value: Float) -> Float {
     return expf(value)
   }

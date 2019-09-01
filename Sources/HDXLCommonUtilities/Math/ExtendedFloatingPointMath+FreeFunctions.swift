@@ -41,6 +41,16 @@ public func sineCosinePi<T:ExtendedFloatingPointMath>(of value: T) -> (T,T) {
 }
 
 @inlinable
+public func exponentiate<T:ExtendedFloatingPointMath>(
+  _ value: T,
+  by exponent: T) -> T {
+  return T.exponentiate(
+    value,
+    by: exponent
+  )
+}
+
+@inlinable
 public func exponentToThePower<T:ExtendedFloatingPointMath>(of value: T) -> T {
   return T.exponentToThePower(of: value)
 }

@@ -47,6 +47,10 @@ public protocol ExtendedFloatingPointMath : BinaryFloatingPoint {
   static func tangentPi(of value: Self) -> Self
   static func sineCosinePi(of value: Self) -> (Self,Self)
   
+  static func exponentiate(
+    _ value: Self,
+    by exponent: Self) -> Self
+  
   static func exponentToThePower(of value: Self) -> Self
   static func exponentMinusOne(of exponent: Self) -> Self
   static func twoToThePower(of value: Self) -> Self
