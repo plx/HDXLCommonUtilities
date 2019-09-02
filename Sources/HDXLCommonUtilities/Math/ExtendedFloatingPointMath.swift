@@ -99,6 +99,13 @@ public extension ExtendedFloatingPointMath {
       by: power
     )
   }
+  
+  @inlinable
+  mutating func formCubeRoot() {
+    self = Self.cubeRoot(
+      of: self
+    )
+  }
 
 }
 
