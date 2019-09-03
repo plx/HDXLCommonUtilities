@@ -163,3 +163,33 @@ public func hyperbolicArctangent<T:ExtendedFloatingPointMath>(of value: T) -> T 
   return T.hyperbolicArctangent(of: value)
 }
 
+@inlinable
+public func signedModulus<T:ExtendedFloatingPointMath>(
+  of value: T,
+  by modulus: T) -> T {
+  return T.signedModulus(
+    of: value,
+    by: modulus
+  )
+}
+
+@inlinable
+public func positiveModulus<T:ExtendedFloatingPointMath>(
+  of value: T,
+  by modulus: T) -> T {
+  return T.positiveModulus(
+    of: value,
+    by: modulus
+  )
+}
+
+@inlinable
+public func negativeModulus<T:ExtendedFloatingPointMath>(
+  of value: T,
+  by modulus: T) -> T {
+  return T.negativeModulus(
+    of: value,
+    by: modulus
+  )
+}
+

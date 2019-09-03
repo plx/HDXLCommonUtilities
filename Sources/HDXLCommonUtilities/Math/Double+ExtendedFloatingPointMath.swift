@@ -166,6 +166,16 @@ extension Double : ExtendedFloatingPointMath {
   public static func hyperbolicArctangent(of value: Double) -> Double {
     return atanh(value)
   }
-  
+
+  @inlinable
+  public static func signedModulus(
+    of value: Double,
+    by modulus: Double) -> Double {
+    precondition(modulus > 0.0)
+    return fmod(
+      value,
+      modulus
+    )
+  }
   
 }

@@ -167,5 +167,16 @@ extension Float : ExtendedFloatingPointMath {
     return atanhf(value)
   }
   
+  @inlinable
+  public static func signedModulus(
+    of value: Float,
+    by modulus: Float) -> Float {
+    precondition(modulus > 0.0)
+    return fmodf(
+      value,
+      modulus
+    )
+  }
   
+
 }

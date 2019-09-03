@@ -80,6 +80,18 @@ public protocol ExtendedFloatingPointMath : BinaryFloatingPoint {
   static func hyperbolicArcsine(of value: Self) -> Self
   static func hyperbolicArccosine(of value: Self) -> Self
   static func hyperbolicArctangent(of value: Self) -> Self
+    
+  static func signedModulus(
+    of value: Self,
+    by modulus: Self) -> Self
+  
+  static func positiveModulus(
+    of value: Self,
+    by modulus: Self) -> Self
+
+  static func negativeModulus(
+    of value: Self,
+    by modulus: Self) -> Self
   
 }
 
@@ -106,6 +118,30 @@ public extension ExtendedFloatingPointMath {
       of: self
     )
   }
+
+  @inlinable
+  static func positiveModulus(
+    of value: Self,
+    by modulus: Self) -> Self {
+    precondition(modulus > 0.0)
+    let result = Self.signedModulus(
+      of: value,
+      by: modulus
+    )
+    return result >= 0.0 ? result : result + modulus
+  }
+
+  @inlinable
+  static func negativeModulus(
+    of value: Self,
+    by modulus: Self) -> Self {
+    let result = Self.signedModulus(
+      of: value,
+      by: modulus
+    )
+    return result <= 0.0 ? result : result - modulus
+  }
+
 
 }
 
