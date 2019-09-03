@@ -126,8 +126,8 @@ public func arctangent<T:ExtendedFloatingPointMath>(of value: T) -> T {
 }
 
 @inlinable
-public func arcTangent2<T:ExtendedFloatingPointMath>(y: T, x: T) -> T {
-  return T.arcTangent2(
+public func arctangent2<T:ExtendedFloatingPointMath>(y: T, x: T) -> T {
+  return T.arctangent2(
     y: y,
     x: x
   )

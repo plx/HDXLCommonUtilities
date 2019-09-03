@@ -71,7 +71,7 @@ public protocol ExtendedFloatingPointMath : BinaryFloatingPoint {
   static func arccosine(of value: Self) -> Self
   static func arctangent(of value: Self) -> Self
   
-  static func arcTangent2(y: Self, x: Self) -> Self
+  static func arctangent2(y: Self, x: Self) -> Self
   
   static func hyperbolicSine(of value: Self) -> Self
   static func hyperbolicCosine(of value: Self) -> Self
@@ -141,7 +141,54 @@ public extension ExtendedFloatingPointMath {
     )
     return result <= 0.0 ? result : result - modulus
   }
+  
+  @inlinable
+  func signedModulus(by modulus: Self) -> Self {
+    return Self.signedModulus(
+      of: self,
+      by: modulus
+    )
+  }
+  
+  @inlinable
+  mutating func formSignedModulus(by modulus: Self) {
+    self = Self.signedModulus(
+      of: self,
+      by: modulus
+    )
+  }
 
+  @inlinable
+  func positiveModulus(by modulus: Self) -> Self {
+    return Self.positiveModulus(
+      of: self,
+      by: modulus
+    )
+  }
+    
+  @inlinable
+  mutating func formPositivePodulus(by modulus: Self) {
+    self = Self.positiveModulus(
+      of: self,
+      by: modulus
+    )
+  }
+
+  @inlinable
+  func negativeModulus(by modulus: Self) -> Self {
+    return Self.negativeModulus(
+      of: self,
+      by: modulus
+    )
+  }
+
+  @inlinable
+  mutating func formNegativeModulus(by modulus: Self){
+    self = Self.negativeModulus(
+      of: self,
+      by: modulus
+    )
+  }
 
 }
 

@@ -130,7 +130,7 @@ extension Float : ExtendedFloatingPointMath {
   }
   
   @inlinable
-  public static func arcTangent2(y: Float, x: Float) -> Float {
+  public static func arctangent2(y: Float, x: Float) -> Float {
     return atan2f(
       y,
       x
