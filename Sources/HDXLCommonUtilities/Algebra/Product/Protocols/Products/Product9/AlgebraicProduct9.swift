@@ -128,6 +128,35 @@ public protocol AlgebraicProduct9 : AlgebraicProduct
 }
 
 // -------------------------------------------------------------------------- //
+// MARK: AlgebraicProduct9 - To-Tuple
+// -------------------------------------------------------------------------- //
+
+public extension AlgebraicProduct9 {
+
+  /// Shorthand for the tuple equivalent-to `Self`.
+  typealias EquivalentTuple = (A,B,C,D,E,F,G,H,I)
+
+  /// Returns a tuple equivalent-to `self`.
+  @inlinable
+  var equivalentTupleValue: EquivalentTuple {
+    get {
+      return (
+        self.a,
+        self.b,
+        self.c,
+        self.d,
+        self.e,
+        self.f,
+        self.g,
+        self.h,
+        self.i
+      )
+    }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
 // MARK: AlgebraicProduct9 - AlgebraicProduct Defaults
 // -------------------------------------------------------------------------- //
 

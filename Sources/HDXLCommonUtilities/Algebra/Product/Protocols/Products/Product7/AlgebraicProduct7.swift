@@ -112,6 +112,33 @@ public protocol AlgebraicProduct7 : AlgebraicProduct
 }
 
 // -------------------------------------------------------------------------- //
+// MARK: AlgebraicProduct7 - To-Tuple
+// -------------------------------------------------------------------------- //
+
+public extension AlgebraicProduct7 {
+  
+  /// Shorthand for the tuple equivalent-to `Self`.
+  typealias EquivalentTuple = (A,B,C,D,E,F,G)
+
+  /// Returns a tuple equivalent-to `self`.
+  @inlinable
+  var equivalentTupleValue: EquivalentTuple {
+    get {
+      return (
+        self.a,
+        self.b,
+        self.c,
+        self.d,
+        self.e,
+        self.f,
+        self.g
+      )
+    }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
 // MARK: AlgebraicProduct7 - AlgebraicProduct Defaults
 // -------------------------------------------------------------------------- //
 

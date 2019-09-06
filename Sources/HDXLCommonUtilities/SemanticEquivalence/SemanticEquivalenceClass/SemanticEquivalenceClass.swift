@@ -31,6 +31,11 @@ public struct SemanticEquivalenceClass<Element:SemanticEquivalenceClassIdentifie
   @usableFromInline
   internal var _equivalentElements: [Element]
   
+  // ------------------------------------------------------------------------ //
+  // MARK: Exposed Properties
+  // ------------------------------------------------------------------------ //
+  
+  /// The *reference element* will always be equivalence class's most-favored element.
   @inlinable
   public var referenceElement: Element {
     get {
@@ -38,6 +43,8 @@ public struct SemanticEquivalenceClass<Element:SemanticEquivalenceClassIdentifie
     }
   }
   
+  /// The *equivalent elements* will always consist of "all elements *other than* the `referenceElement`,
+  /// arranged from least-to-most favored.
   @inlinable
   public var equivalentElements: [Element] {
     get {
@@ -45,6 +52,11 @@ public struct SemanticEquivalenceClass<Element:SemanticEquivalenceClassIdentifie
     }
   }
   
+  // ------------------------------------------------------------------------ //
+  // MARK: Initialization
+  // ------------------------------------------------------------------------ //
+
+  /// Construct an equivalence class from an initial reference element.
   @inlinable
   internal init(
     referenceElement: Element) {
@@ -63,6 +75,7 @@ public struct SemanticEquivalenceClass<Element:SemanticEquivalenceClassIdentifie
 
 public extension SemanticEquivalenceClass {
   
+  /// The (common) `SemanticEquivalenceClassIdentifier` for this equivalence class.
   @inlinable
   var semanticEquivalenceClassIdentifier: Identifier {
     get {
@@ -70,6 +83,7 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// Count of all elements within `self` (e.g. count *including* the reference element *and* the equivalent elements).
   @inlinable
   var elementCount: Int {
     get {
@@ -77,6 +91,7 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// Count of the *equivalent elements* (e.g. count *without* the reference element).
   @inlinable
   var equivalentElementCount: Int {
     get {
@@ -84,6 +99,7 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// `true` iff this equivalence class contains more than just the reference element.
   @inlinable
   var containsMultipleRepresentations: Bool {
     get {
@@ -91,6 +107,7 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// `true` iff this equivalence class contains `element`.
   @inlinable
   func contains(element: Element) -> Bool {
     guard self.referenceElement != element else {
@@ -101,6 +118,7 @@ public extension SemanticEquivalenceClass {
     )
   }
   
+  /// Returns the least-favored element within `self`.
   @inlinable
   var leastFavoredElement: Element {
     get {
@@ -108,6 +126,7 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// Returns the most-favored element within `self`.
   @inlinable
   var mostFavoredElement: Element {
     get {
@@ -115,8 +134,15 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// `true` iff the members of this equivalence class have semantics distinct
+  /// from those of `equivalenceClass`. Note that when all invariants have been
+  /// properly-maintained, all elements within `self` will have equivalent
+  /// semantics with each other and all elements within `equivalenceClass` will
+  /// have equivalent semantics with each other; if that holds, comparing the
+  /// semantics of the reference elements suffices for comparing the semantics of
+  /// the equivalence classes.
   @inlinable
-  func isDistinctSemantics(from equivalenceClass: SemanticEquivalenceClass<Element>) -> Bool {
+  func hasDistinctSemantics(from equivalenceClass: SemanticEquivalenceClass<Element>) -> Bool {
     // /////////////////////////////////////////////////////////////////////////
     pedantic_assert(equivalenceClass.isValid)
     pedantic_assert(self.isValid)
@@ -124,6 +150,9 @@ public extension SemanticEquivalenceClass {
     return !self.referenceElement.hasEquivalentSemantics(to: equivalenceClass.referenceElement)
   }
   
+  /// `true` iff there is no elementwise-intersection between `self` and `equivalenceClass`.
+  ///
+  /// - note: The implementation expects the invariants to be upheld, and won't work if they aren't.
   @inlinable
   func isDisjoint(with equivalenceClass: SemanticEquivalenceClass<Element>) -> Bool {
     // /////////////////////////////////////////////////////////////////////////
@@ -209,32 +238,19 @@ public extension SemanticEquivalenceClass {
     }
   }
 
-//  @inlinable
-//  func isDisjoint(with objects: ObjectSet<Object>) -> Bool {
-//    return !objects.contains(self.referenceObject) && objects.isDisjoint(with: self.equivalentElements)
-//  }
-//
-//  @inlinable
-//  func isDisjoint(with other: SemanticEquivalenceClass<Object>) -> Bool {
-//    guard self.semanticEquivalenceClassIdentifier == other.semanticEquivalenceClassIdentifier else {
-//      return true
-//    }
-//    guard
-//      self.referenceObject !== other.referenceObject,
-//      !self.equivalentObjects.contains(other.referenceObject),
-//      !other.equivalentObjects.contains(self.referenceObject),
-//      self.equivalentObjects.isDisjoint(with: other.equivalentObjects) else {
-//        return false
-//    }
-//    return true
-//  }
-//
-  
+  /// Returns `true` iff `self` *should incorporate* `element`.
+  ///
+  /// - note: Have considered merging this with `incorporate(element:)` but keeping it distinct for now.
+  ///
   @inlinable
   internal func shouldInclude(element: Element) -> Bool {
     return self.referenceElement.hasEquivalentSemantics(to: element)
   }
   
+  /// Updates `self` by incorporating `element`.
+  ///
+  /// - precondition: `self.shouldInclude(element: element)`.
+  ///
   @inlinable
   internal mutating func incorporate(element: Element) {
     precondition(self.referenceElement.hasEquivalentSemantics(to: element))
@@ -259,6 +275,28 @@ public extension SemanticEquivalenceClass {
         self._equivalentElements.append(element)
       }
     }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
+// MARK: SemanticEquivalenceClass - Support - Objects
+// -------------------------------------------------------------------------- //
+
+internal extension SemanticEquivalenceClass where Element:AnyObject {
+  
+  /// Returns `true` iff `self` is disjoint with the *objects* contained in `objects`.
+  ///
+  /// - note: Special case for objects; motivated for use with `CoreData`.
+  ///
+  @inlinable
+  func isDisjoint(with objects: ObjectSet<Element>) -> Bool {
+    guard
+      !objects.contains(self.referenceElement),
+      objects.isDisjoint(with: self.equivalentElements) else {
+        return false
+    }
+    return true
   }
   
 }
@@ -293,6 +331,9 @@ extension SemanticEquivalenceClass : Validatable {
     guard self.equivalentElements.count >= 2 else {
       return true
     }
+    // note: if you trust the implementation of the favorability comparison,
+    // then we can do `for (lessFavored,moreFavored) in self.equivalentElements.adjacentPairs()`,
+    // but for now I'm doing *all* comparisons to help shake out potential favorability bugs.
     for upperIndex in 1..<self.equivalentElements.count {
       // yeah, yeah, enumerated().dropFirst() could work but keep it easy:
       let favoredElement = self.equivalentElements[upperIndex]
@@ -412,6 +453,9 @@ public extension SemanticEquivalenceClass {
   
   typealias Elements = Chain2Collection<[Element],CollectionOfOne<Element>>
   
+  /// Returns all elements in `self`, arranged least-to-most favored.
+  ///
+  /// - todo: use `some Collection` once I can suitably constrain with a `where` clause.
   @inlinable
   var equivalenceClassElements: Elements {
     get {

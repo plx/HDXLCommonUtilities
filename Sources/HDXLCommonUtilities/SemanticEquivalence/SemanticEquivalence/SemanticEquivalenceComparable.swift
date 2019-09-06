@@ -20,7 +20,7 @@ infix operator <~> : ComparisonPrecedence
 
 /// `SemanticEquivalenceComparable` is for types for which there is both:
 ///
-/// 1. some notion of "semantic equivalence" between values
+/// 1. some notion of "semantic equialence" between values
 /// 2. a criterion establishing some "equivalent values" as more-favorable than others
 ///
 /// ...both of which will need some clarification moving forward.
@@ -190,7 +190,7 @@ public protocol SemanticEquivalenceComparable : Equatable {
   /// *Conformers* to this protocol can consider overriding this for performance,
   /// but need not do so; in many cases the default implementation will suffice.
   ///
-  func hasSemanticEquivalence(with other: Self) -> Bool
+  func hasEquivalentSemantics(to other: Self) -> Bool
   
   /// Check for favorability vis-a-vis `other` (and *only* for favorability).
   ///

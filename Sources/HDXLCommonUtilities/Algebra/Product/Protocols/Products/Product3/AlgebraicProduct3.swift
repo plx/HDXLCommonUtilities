@@ -80,6 +80,29 @@ public protocol AlgebraicProduct3 : AlgebraicProduct
 }
 
 // -------------------------------------------------------------------------- //
+// MARK: AlgebraicProduct3 - To-Tuple
+// -------------------------------------------------------------------------- //
+
+public extension AlgebraicProduct3 {
+  
+  /// Shorthand for the tuple equivalent-to `Self`.
+  typealias EquivalentTuple = (A,B,C)
+
+  /// Returns a tuple equivalent-to `self`.
+  @inlinable
+  var equivalentTupleValue: EquivalentTuple {
+    get {
+      return (
+        self.a,
+        self.b,
+        self.c
+      )
+    }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
 // MARK: AlgebraicProduct3 - AlgebraicProduct Defaults
 // -------------------------------------------------------------------------- //
 

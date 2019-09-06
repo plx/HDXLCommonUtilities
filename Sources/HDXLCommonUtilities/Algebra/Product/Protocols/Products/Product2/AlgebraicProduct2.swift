@@ -77,6 +77,29 @@ public protocol AlgebraicProduct2 : AlgebraicProduct
 
 public extension AlgebraicProduct2 {
   
+  /// Shorthand for the tuple equivalent-to `Self`.
+  typealias EquivalentTuple = (A,B)
+  
+  /// Returns a tuple equivalent-to `self`.
+  @inlinable
+  var equivalentTupleValue: EquivalentTuple {
+    get {
+      return (
+        self.a,
+        self.b
+      )
+    }
+  }
+  
+}
+
+
+// -------------------------------------------------------------------------- //
+// MARK: AlgebraicProduct2 - AlgebraicProduct Defaults
+// -------------------------------------------------------------------------- //
+
+public extension AlgebraicProduct2 {
+  
   @inlinable
   static var arity: Int {
     get {

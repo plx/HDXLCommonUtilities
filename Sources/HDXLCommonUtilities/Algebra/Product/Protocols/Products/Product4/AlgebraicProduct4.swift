@@ -88,6 +88,30 @@ public protocol AlgebraicProduct4 : AlgebraicProduct
 }
 
 // -------------------------------------------------------------------------- //
+// MARK: AlgebraicProduct4 - To-Tuple
+// -------------------------------------------------------------------------- //
+
+public extension AlgebraicProduct4 {
+  
+  /// Shorthand for the tuple equivalent-to `Self`.
+  typealias EquivalentTuple = (A,B,C,D)
+
+  /// Returns a tuple equivalent-to `self`.
+  @inlinable
+  var equivalentTupleValue: EquivalentTuple {
+    get {
+      return (
+        self.a,
+        self.b,
+        self.c,
+        self.d
+      )
+    }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
 // MARK: AlgebraicProduct4 - AlgebraicProduct Defaults
 // -------------------------------------------------------------------------- //
 
