@@ -58,7 +58,7 @@ public struct SemanticEquivalenceClass<Element:SemanticEquivalenceClassIdentifie
 
   /// Construct an equivalence class from an initial reference element.
   @inlinable
-  internal init(
+  public init(
     referenceElement: Element) {
     // /////////////////////////////////////////////////////////////////////////
     defer { pedantic_assert(self.isValid) }
