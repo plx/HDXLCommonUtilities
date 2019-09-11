@@ -137,7 +137,39 @@ public extension SemanticEquivalenceTable {
       )
     }
   }
-  
+
+  /// Updates `self` by incorporating an additional `element`, but only if it is
+  /// a member of a pre-existing equivalence class.
+  @inlinable
+  mutating func conditionallyIncorporate(elementWhenEquivalenceClassIsKnown element: Element) {
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(self.isValid)
+    defer { pedantic_assert(self.isValid) }
+    // /////////////////////////////////////////////////////////////////////////
+    let semanticEquivalenceClassIdentifier = element.semanticEquivalenceClassIdentifier
+    if let indexOfExistingTableEntry = self.table.index(forKey: semanticEquivalenceClassIdentifier) {
+      self.table.values[indexOfExistingTableEntry].weaklyIncorporate(
+        element: element
+      )
+    }
+  }
+
+  /// Updates `self` by incorporating an additional `element`, but only if it is
+  /// a member of a pre-existing equivalence class.
+  @inlinable
+  mutating func conditionallyIncorporate(elementWhenIdentifierIsKnown element: Element) {
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(self.isValid)
+    defer { pedantic_assert(self.isValid) }
+    // /////////////////////////////////////////////////////////////////////////
+    let semanticEquivalenceClassIdentifier = element.semanticEquivalenceClassIdentifier
+    if let indexOfExistingTableEntry = self.table.index(forKey: semanticEquivalenceClassIdentifier) {
+      self.table.values[indexOfExistingTableEntry].incorporate(
+        element: element
+      )
+    }
+  }
+
   /// Updates `self` by incorporating each element from `elements`.
   @inlinable
   mutating func incorporate<S:Sequence>(elements: S) where S.Element == Element {
@@ -149,6 +181,36 @@ public extension SemanticEquivalenceTable {
       self.incorporate(element: element)
     }
   }
+
+  /// Updates `self` by incorporating each element from `elements`.
+  @inlinable
+  mutating func conditionallyIncorporate<S:Sequence>(elementsWhenEquivalenceClassIsKnown elements: S) where S.Element == Element {
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(self.isValid)
+    defer { pedantic_assert(self.isValid) }
+    // /////////////////////////////////////////////////////////////////////////
+    for element in elements {
+      self.conditionallyIncorporate(
+        elementWhenEquivalenceClassIsKnown: element
+      )
+    }
+  }
+
+
+  /// Updates `self` by incorporating each element from `elements`.
+  @inlinable
+  mutating func conditionallyIncorporate<S:Sequence>(elementsWhenIdentifierIsKnown elements: S) where S.Element == Element {
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(self.isValid)
+    defer { pedantic_assert(self.isValid) }
+    // /////////////////////////////////////////////////////////////////////////
+    for element in elements {
+      self.conditionallyIncorporate(
+        elementWhenIdentifierIsKnown: element
+      )
+    }
+  }
+
 
   /// Updates `self` by removing all equivalence classes for which `predicate` evaluates to *true*.
   @inlinable

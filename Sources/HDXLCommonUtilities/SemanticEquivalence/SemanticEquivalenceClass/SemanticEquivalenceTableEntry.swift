@@ -131,6 +131,21 @@ internal extension SemanticEquivalenceTableEntry {
       )
     }
   }
+
+  /// Incorporates `element`, but only if it is a member of an already-known equivalence class.
+  @inlinable
+  mutating func weaklyIncorporate(element: Element) {
+    precondition(element.semanticEquivalenceClassIdentifier == self.semanticEquivalenceClassIdentifier)
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(self.isValid)
+    defer { pedantic_assert(self.isValid) }
+    // /////////////////////////////////////////////////////////////////////////
+    if let indexOfExistingIndexClass = self.equivalenceClasses.firstIndex(where: {$0.shouldInclude(element: element)}) {
+      self.equivalenceClasses[indexOfExistingIndexClass].incorporate(
+        element: element
+      )
+    }
+  }
   
   /// Removes entries for any equivalence classes for-which `predicate` evaluates to `true`.
   ///

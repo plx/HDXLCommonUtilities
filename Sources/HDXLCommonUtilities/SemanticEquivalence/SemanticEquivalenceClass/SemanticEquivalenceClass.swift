@@ -277,6 +277,37 @@ public extension SemanticEquivalenceClass {
     }
   }
   
+  /// "Safely incorporate" an `element` that may or may not actually-belong in `self`.
+  @inlinable
+  mutating func weaklyIncorporate(element: Element) {
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(self.isValid)
+    defer { pedantic_assert(self.isValid) }
+    // /////////////////////////////////////////////////////////////////////////
+    if self.shouldInclude(element: element) {
+      self.incorporate(element:
+        element
+      )
+    }
+  }
+  
+  /// "Safely incorporate" `elements` that may or may not actually-belong in `self`.
+  @inlinable
+  mutating func weaklyIncorporate<S>(elements: S)
+    where
+    S:Sequence,
+    S.Element == Element {
+      // ///////////////////////////////////////////////////////////////////////
+      pedantic_assert(self.isValid)
+      defer { pedantic_assert(self.isValid) }
+      // ///////////////////////////////////////////////////////////////////////
+      for element in elements {
+        self.weaklyIncorporate(
+          element: element
+        )
+      }
+  }
+
 }
 
 // -------------------------------------------------------------------------- //
