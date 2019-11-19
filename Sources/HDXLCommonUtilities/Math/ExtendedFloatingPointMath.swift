@@ -3,83 +3,43 @@
 //
 
 import Foundation
+import Numerics
 
-/// Protocol letting me get free-standing functions that work on `Double` and `Float`.
+/// Edit circa version 0.0.30: the initial release of the `Numerics` package was
+/// right around when I picked this back up. Since (a) the `Real` protocol is the
+/// same as this--*mutatis mutandis*, etc.--I've decided to come back, base this
+/// atop `Real`, and eliminate as much as I can.
 ///
-/// I use full, nonstandard names to *lessen* the risk of name collisions with
-/// (eventual) standard-library improvements, third-party libraries, and all that.
+/// I'm a little hestitant to drop the `π`-unit trigonometric methods and a little
+/// hestitant to drop the `modulus`-related methods, though--I actually use those
+/// downstream from this package--and so, for now, I won't be *eliminating* this
+/// protocol...I'll just be rebasing it to inherit from `Real`, instead.
 ///
-/// The issue, here, btw, is that the C math functions are type-specific in that
-/// e.g. `sin` takes a `Double` and `sinf` takes a `Float`; recent versions of C
-/// include a generics feature, Clang has supported overloading for C-style functions
-/// for a long time, etc., but...in Swift they still show up as `sin` and `sinf`
-/// (to the best of my knowledge--if there's type-generic/overloaded versions
-/// I haven't found them).
+/// Since this is just an experiment I'll be keeping my nonstandard-name free
+/// functions for now (less code to change upfront; may get dropped later on).
 ///
-/// This *protocol* is basically (a) re-exposing this pre-existing API as static
-/// methods on the type so that (b) `Float` and `Double` can each provide a "mapping"
-/// from the protocol methods to the corresponding, type-specific functions. We
-/// can then implement freestanding, generic functions that call the appropriate
-/// static method on the value, e.g.:
+/// In the future I would prefer to drop this protocol entirely.
 ///
-/// ```
-/// func sine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-///   return T.sine(of: value)
-/// }
-/// ```
-///
-/// ...which means for `Float` we wind up with `sine(of: x)` being the same as
-/// `sinf(x)` (after several levels of *compile-time* indirection).
-///
-/// For now I'm just defining this in the obvious way and sticking it into my
-/// common utilities for e
-/// ase of use elsewhere; of all the functionality within
-/// this library, however, this is the best candidate for breaking my rules about
-/// things like `@inline(__always)` and even `@_transparent`--it's really important
-/// this protocol not introduce ridiculous overhead vis-a-vis what it actually does.
-public protocol ExtendedFloatingPointMath : BinaryFloatingPoint {
+/// As was previously the case, this protocol is a *temporary* implementation
+/// detail--to be phased out in favor of `Real` as soon as possible.
+public protocol ExtendedFloatingPointMath : Real, ExpressibleByFloatLiteral {
   
-  static func squareRoot(of value: Self) -> Self
   static func cubeRoot(of value: Self) -> Self
-  static func hypotenuseLength(_ a: Self, _ b: Self) -> Self
+  
+  static func sineCosine(of value: Self) -> (Self,Self)
   
   static func sinePi(of value: Self) -> Self
   static func cosinePi(of value: Self) -> Self
   static func tangentPi(of value: Self) -> Self
   static func sineCosinePi(of value: Self) -> (Self,Self)
   
-  static func exponentiate(
-    _ value: Self,
-    by exponent: Self) -> Self
-  
-  static func exponentToThePower(of value: Self) -> Self
-  static func exponentMinusOne(of exponent: Self) -> Self
   static func twoToThePower(of value: Self) -> Self
   static func tenToThePower(of value: Self) -> Self
   
-  static func naturalLogarithm(of value: Self) -> Self
-  static func naturalLogarithmOfOnePlus(_ value: Self) -> Self
   static func baseTwoLogarithm(of value: Self) -> Self
   static func baseTenLogarithm(of value: Self) -> Self
-    
-  static func sine(of value: Self) -> Self
-  static func cosine(of value: Self) -> Self
-  static func tangent(of value: Self) -> Self
-  static func sineCosine(of value: Self) -> (Self,Self)
   
-  static func arcsine(of value: Self) -> Self
-  static func arccosine(of value: Self) -> Self
-  static func arctangent(of value: Self) -> Self
-  
-  static func arctangent2(y: Self, x: Self) -> Self
-  
-  static func hyperbolicSine(of value: Self) -> Self
-  static func hyperbolicCosine(of value: Self) -> Self
-  static func hyperbolicTangent(of value: Self) -> Self
-
-  static func hyperbolicArcsine(of value: Self) -> Self
-  static func hyperbolicArccosine(of value: Self) -> Self
-  static func hyperbolicArctangent(of value: Self) -> Self
+  static func piArctangent2(y: Self, x: Self) -> Self
     
   static func signedModulus(
     of value: Self,
@@ -98,16 +58,14 @@ public protocol ExtendedFloatingPointMath : BinaryFloatingPoint {
 public extension ExtendedFloatingPointMath {
   
   @inlinable
-  func exponentiated(by power: Self) -> Self {
-    return Self.exponentiate(
-      self,
-      by: power
-    )
+  static func piArctangent2(y: Self, x: Self) -> Self {
+    return Self.atan2(y: y, x: x) / Self.pi
   }
   
   @inlinable
   mutating func formExponentiation(by power: Self) {
-    self = self.exponentiated(
+    self = exponentiate(
+      self,
       by: power
     )
   }
@@ -123,12 +81,12 @@ public extension ExtendedFloatingPointMath {
   static func positiveModulus(
     of value: Self,
     by modulus: Self) -> Self {
-    precondition(modulus > 0.0)
+    precondition(modulus > 0)
     let result = Self.signedModulus(
       of: value,
       by: modulus
     )
-    return result >= 0.0 ? result : result + modulus
+    return result >= 0 ? result : result + modulus
   }
 
   @inlinable
@@ -139,7 +97,7 @@ public extension ExtendedFloatingPointMath {
       of: value,
       by: modulus
     )
-    return result <= 0.0 ? result : result - modulus
+    return result <= 0 ? result : result - modulus
   }
   
   @inlinable

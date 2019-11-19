@@ -3,11 +3,11 @@
 //  
 
 import Foundation
-
+import Numerics
 
 @inlinable
 public func squareRoot<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.squareRoot(of: value)
+  return .sqrt(value)
 }
 
 @inlinable
@@ -17,7 +17,7 @@ public func cubeRoot<T:ExtendedFloatingPointMath>(of value: T) -> T {
 
 @inlinable
 public func hypotenuseLength<T:ExtendedFloatingPointMath>(_ a: T, _ b: T) -> T {
-  return T.hypotenuseLength(a, b)
+  return .hypot(a, b)
 }
 
 @inlinable
@@ -44,20 +44,20 @@ public func sineCosinePi<T:ExtendedFloatingPointMath>(of value: T) -> (T,T) {
 public func exponentiate<T:ExtendedFloatingPointMath>(
   _ value: T,
   by exponent: T) -> T {
-  return T.exponentiate(
+  return .pow(
     value,
-    by: exponent
+    exponent
   )
 }
 
 @inlinable
 public func exponentToThePower<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.exponentToThePower(of: value)
+  return .exp(value)
 }
 
 @inlinable
 public func exponentMinusOne<T:ExtendedFloatingPointMath>(of exponent: T) -> T {
-  return T.exponentMinusOne(of: exponent)
+  return .expMinusOne(exponent)
 }
 
 @inlinable
@@ -72,12 +72,12 @@ public func tenToThePower<T:ExtendedFloatingPointMath>(of value: T) -> T {
 
 @inlinable
 public func naturalLogarithm<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.naturalLogarithm(of: value)
+  return .log(value)
 }
 
 @inlinable
 public func naturalLogarithmOfOnePlus<T:ExtendedFloatingPointMath>(_ value: T) -> T {
-  return T.naturalLogarithmOfOnePlus(value)
+  return .log(onePlus: value)
 }
 
 @inlinable
@@ -92,17 +92,17 @@ public func baseTenLogarithm<T:ExtendedFloatingPointMath>(of value: T) -> T {
 
 @inlinable
 public func sine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.sine(of: value)
+  return .sin(value)
 }
 
 @inlinable
 public func cosine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.cosine(of: value)
+  return .cos(value)
 }
 
 @inlinable
 public func tangent<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.tangent(of: value)
+  return .tan(value)
 }
 
 @inlinable
@@ -112,22 +112,30 @@ public func sineCosine<T:ExtendedFloatingPointMath>(of value: T) -> (T,T) {
 
 @inlinable
 public func arcsine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.arcsine(of: value)
+  return .asin(value)
 }
 
 @inlinable
 public func arccosine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.arccosine(of: value)
+  return .acos(value)
 }
 
 @inlinable
 public func arctangent<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.arctangent(of: value)
+  return .atan(value)
 }
 
 @inlinable
 public func arctangent2<T:ExtendedFloatingPointMath>(y: T, x: T) -> T {
-  return T.arctangent2(
+  return .atan2(
+    y: y,
+    x: x
+  )
+}
+
+@inlinable
+public func piArctangent2<T:ExtendedFloatingPointMath>(y: T, x: T) -> T {
+  return T.piArctangent2(
     y: y,
     x: x
   )
@@ -135,32 +143,32 @@ public func arctangent2<T:ExtendedFloatingPointMath>(y: T, x: T) -> T {
 
 @inlinable
 public func hyperbolicSine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.hyperbolicSine(of: value)
+  return .sinh(value)
 }
 
 @inlinable
 public func hyperbolicCosine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.hyperbolicCosine(of: value)
+  return .cosh(value)
 }
 
 @inlinable
 public func hyperbolicTangent<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.hyperbolicTangent(of: value)
+  return .tanh(value)
 }
 
 @inlinable
 public func hyperbolicArcsine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.hyperbolicArcsine(of: value)
+  return .asinh(value)
 }
 
 @inlinable
 public func hyperbolicArccosine<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.hyperbolicArccosine(of: value)
+  return .acosh(value)
 }
 
 @inlinable
 public func hyperbolicArctangent<T:ExtendedFloatingPointMath>(of value: T) -> T {
-  return T.hyperbolicArctangent(of: value)
+  return .atanh(value)
 }
 
 @inlinable

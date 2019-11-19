@@ -1,14 +1,14 @@
 //
-//  BinaryFloatingPoint+Attributes.swift
+//  FloatingPoint+Attributes.swift
 //
 
 import Foundation
 
 // ----------------------------------------------------------------------- //
-// MARK: BinaryFloatingPoint - Non-Zero
+// MARK: FloatingPoint - Non-Zero
 // ----------------------------------------------------------------------- //
 
-public extension BinaryFloatingPoint {
+public extension FloatingPoint {
   
   /// Check if `self` is `!= 0.0`
   @inlinable
@@ -34,16 +34,16 @@ public extension BinaryFloatingPoint {
 }
 
 // ----------------------------------------------------------------------- //
-// MARK: BinaryFloatingPoint - Non-Negative
+// MARK: FloatingPoint - Non-Negative
 // ----------------------------------------------------------------------- //
 
-public extension BinaryFloatingPoint {
+public extension FloatingPoint {
   
   /// Check if `self` is `>= 0.0`.
   @inlinable
   var isNonNegative: Bool {
     get {
-      return self >= 0.0
+      return self >= 0
     }
   }
 
@@ -63,16 +63,16 @@ public extension BinaryFloatingPoint {
 }
 
 // ----------------------------------------------------------------------- //
-// MARK: BinaryFloatingPoint - Strictly Positive
+// MARK: FloatingPoint - Strictly Positive
 // ----------------------------------------------------------------------- //
 
-public extension BinaryFloatingPoint {
+public extension FloatingPoint {
 
   /// Check if `self` is `> 0.0`.
   @inlinable
   var isStrictlyPositive: Bool {
     get {
-      return self > 0.0
+      return self > 0
     }
   }
 
@@ -92,16 +92,16 @@ public extension BinaryFloatingPoint {
 }
 
 // ----------------------------------------------------------------------- //
-// MARK: BinaryFloatingPoint - Non-Positive
+// MARK: FloatingPoint - Non-Positive
 // ----------------------------------------------------------------------- //
 
-public extension BinaryFloatingPoint {
+public extension FloatingPoint {
   
   /// Check if `self` is`<= 0.0`.
   @inlinable
   var isNonPositive: Bool {
     get {
-      return self <= 0.0
+      return self <= 0
     }
   }
   
@@ -121,16 +121,16 @@ public extension BinaryFloatingPoint {
 }
 
 // ----------------------------------------------------------------------- //
-// MARK: BinaryFloatingPoint - Strictly Negative
+// MARK: FloatingPoint - Strictly Negative
 // ----------------------------------------------------------------------- //
 
-public extension BinaryFloatingPoint {
+public extension FloatingPoint {
   
   /// Check if `self` is`< 0.0`.
   @inlinable
   var isStrictlyNegative: Bool {
     get {
-      return self < 0.0
+      return self < 0
     }
   }
   
