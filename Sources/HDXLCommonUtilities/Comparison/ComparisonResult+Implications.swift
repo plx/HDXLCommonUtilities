@@ -1,5 +1,5 @@
 //
-//  ComparisonResult.swift
+//  ComparisonResult+Implications.swift
 //
 
 import Foundation

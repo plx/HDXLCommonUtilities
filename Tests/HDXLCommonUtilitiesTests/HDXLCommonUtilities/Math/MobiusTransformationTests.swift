@@ -22,7 +22,50 @@ class MobiusTransformationTests: XCTestCase {
     testValues.append(.infinity)
     return testValues
   }
+
+  let epsilonForDoubleComplex: Double = 0.0001
+  let epsilonForFloatComplex: Float = 0.0001
+
+  func closeEnough(
+    _ x: Complex<Double>,
+    _ y: Complex<Double>) -> Bool {
+    return x.hasInfinityNormDistance(
+      strictlyLessThan: self.epsilonForDoubleComplex,
+      to: y
+    )
+  }
   
+  func closeEnough(
+    _ x: Complex<Float>,
+    _ y: Complex<Float>) -> Bool {
+    return x.hasInfinityNormDistance(
+      strictlyLessThan: self.epsilonForFloatComplex,
+      to: y
+    )
+  }
+
+  let epsilonForDoubleTransforms: Double = 0.0001
+  let epsilonForFloatTransforms: Float = 0.0001
+  
+  func closeEnough(
+    _ x: MobiusTransformation<Double>,
+    _ y: MobiusTransformation<Double>) -> Bool {
+    return x.hasInfinityNormDistance(
+      strictlyLessThan: self.epsilonForDoubleTransforms,
+      to: y
+    )
+  }
+
+  func closeEnough(
+    _ x: MobiusTransformation<Float>,
+    _ y: MobiusTransformation<Float>) -> Bool {
+    return x.hasInfinityNormDistance(
+      strictlyLessThan: self.epsilonForFloatTransforms,
+      to: y
+    )
+  }
+  
+
   let depthForTesting: Int = 10
   
   lazy var exampleComplexFloats: [Complex<Float>] = self.prepareTestValues(
@@ -88,34 +131,71 @@ class MobiusTransformationTests: XCTestCase {
           sending: ws,
           to: zs
         )
-        XCTAssertTrue(transform.isValid)
-        XCTAssertTrue(inverseTransform.isValid)
-        XCTAssertEqual(transform.inverted, inverseTransform)
-        XCTAssertEqual(inverseTransform.inverted, transform)
+        XCTAssertTrue(
+          transform.isValid,
+          """
+          `transform` \(transform.debugDescription) isn't valid.
+          - zs: (\(zs.0.debugDescription),\(zs.1.debugDescription),\(zs.2.debugDescription)),
+          - ws: (\(ws.0.debugDescription),\(ws.1.debugDescription),\(ws.2.debugDescription))
+          """
+        )
+        XCTAssertTrue(
+          inverseTransform.isValid,
+          """
+          `inverseTransform` \(inverseTransform.debugDescription) isn't valid.
+          - zs: (\(zs.0.debugDescription),\(zs.1.debugDescription),\(zs.2.debugDescription)),
+          - ws: (\(ws.0.debugDescription),\(ws.1.debugDescription),\(ws.2.debugDescription))
+          """
+        )
         
-        XCTAssertEqual(
-          transform.apply(to: zs.0),
-          ws.0
+        XCTAssertTrue(
+          self.closeEnough(
+            transform.inverted,
+            inverseTransform
+          )
         )
-        XCTAssertEqual(
-          transform.apply(to: zs.1),
-          ws.1
+        XCTAssertTrue(
+          self.closeEnough(
+            inverseTransform.inverted,
+            transform
+          )
         )
-        XCTAssertEqual(
-          transform.apply(to: zs.2),
-          ws.2
+        
+        XCTAssertTrue(
+          self.closeEnough(
+            transform.apply(to: zs.0),
+            ws.0
+          )
         )
-        XCTAssertEqual(
-          inverseTransform.apply(to: ws.0),
-          zs.0
+        XCTAssertTrue(
+          self.closeEnough(
+            transform.apply(to: zs.1),
+            ws.1
+          )
         )
-        XCTAssertEqual(
-          inverseTransform.apply(to: ws.1),
-          zs.1
+        XCTAssertTrue(
+          self.closeEnough(
+            transform.apply(to: zs.2),
+            ws.2
+          )
         )
-        XCTAssertEqual(
-          inverseTransform.apply(to: ws.2),
-          zs.2
+        XCTAssertTrue(
+          self.closeEnough(
+            inverseTransform.apply(to: ws.0),
+            zs.0
+          )
+        )
+        XCTAssertTrue(
+          self.closeEnough(
+            inverseTransform.apply(to: ws.1),
+            zs.1
+          )
+        )
+        XCTAssertTrue(
+          self.closeEnough(
+            inverseTransform.apply(to: ws.2),
+            zs.2
+          )
         )
 
       }

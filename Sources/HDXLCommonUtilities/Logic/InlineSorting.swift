@@ -91,6 +91,24 @@ public func customizedAscendingArrangement<T>(_ a: T, _ b: T, using comparator: 
   }
 }
 
+/// Given three arguments `(a,b,c)` and a `comparator` sending `(T,T)` to a `ComparisonResult`,
+/// returns a tuple s.t. the arguments arranged ascendingly as-per `comparator`.
+///
+/// - note: Behavior when `comparator` is unspecified and shouldn't be relied-upon (and: shouldn't matter!).
+///
+@inlinable
+public func customizedAscendingArrangement<T>(_ a: T, _ b: T, _ c: T, using comparator: (T,T) -> ComparisonResult) -> (T,T,T) {
+  return merge(
+    value: c,
+    into: customizedAscendingArrangement(
+      a,
+      b,
+      using: comparator
+    ),
+    using: comparator
+  )
+}
+
 /// Given two arguments `(a,b)` and a `comparator` sending `(T,T)` to a `ComparisonResult`,
 /// returns a tuple s.t. the arguments arranged descendingly as-per `comparator`.
 ///

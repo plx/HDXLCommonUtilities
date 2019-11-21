@@ -111,7 +111,7 @@ public extension MobiusTransformation {
     pedantic_assert(allArgumentsDistinct(w1,w2,w3))
     // /////////////////////////////////////////////////////////////////////////
     let zInfinityCount = countOfInfinity(z1,z2,z3)
-    let wInfinityCount = countOfInfinity(z1,z2,z3)
+    let wInfinityCount = countOfInfinity(w1,w2,w3)
     // /////////////////////////////////////////////////////////////////////////
     pedantic_assert((0...1).contains(zInfinityCount))
     pedantic_assert((0...1).contains(wInfinityCount))
@@ -240,6 +240,62 @@ public extension MobiusTransformation {
   }
   
 }
+
+// -------------------------------------------------------------------------- //
+// MARK: MobiusTransformation - Comparison API
+// -------------------------------------------------------------------------- //
+
+public extension MobiusTransformation {
+  
+  /// Simple distance calculation returning the largest absolute distance between the coefficients in `x` and `y`.
+  @inlinable
+  static func infinityNormDistance(
+    from x: MobiusTransformation<Representation>,
+    to y: MobiusTransformation<Representation>) -> Representation {
+    // /////////////////////////////////////////////////////////////////////////
+    pedantic_assert(x.isValid)
+    pedantic_assert(y.isValid)
+    // /////////////////////////////////////////////////////////////////////////
+    return max(
+      Complex<Representation>.infinityNormDistance(
+        from: x.a,
+        to: y.a
+      ),
+      Complex<Representation>.infinityNormDistance(
+        from: x.b,
+        to: y.b
+      ),
+      Complex<Representation>.infinityNormDistance(
+        from: x.c,
+        to: y.c
+      ),
+      Complex<Representation>.infinityNormDistance(
+        from: x.d,
+        to: y.d
+      )
+    )
+  }
+  
+  @inlinable
+  func infinityNormDistance(to other: MobiusTransformation<Representation>) -> Representation {
+    return MobiusTransformation<Representation>.infinityNormDistance(
+      from: self,
+      to: other
+    )
+  }
+  
+  @inlinable
+  func hasInfinityNormDistance(
+    strictlyLessThan epsilon: Representation,
+    to other: MobiusTransformation<Representation>) -> Bool {
+    pedantic_assert(epsilon >= 0)
+    return self.infinityNormDistance(
+      to: other
+    ) < epsilon
+  }
+  
+}
+
 
 // -------------------------------------------------------------------------- //
 // MARK: MobiusTransformation - Manipulation API
@@ -375,6 +431,36 @@ extension MobiusTransformation : Hashable {
 }
 
 // -------------------------------------------------------------------------- //
+// MARK: MobiusTransformation - CustomStringConvertible
+// -------------------------------------------------------------------------- //
+
+extension MobiusTransformation : CustomStringConvertible {
+  
+  @inlinable
+  public var description: String {
+    get {
+      return "h(z) = (\(self.a.description)z + \(self.b.description))/(\(self.c.description)z + \(self.d.description))"
+    }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
+// MARK: MobiusTransformation - CustomDebugStringConvertible
+// -------------------------------------------------------------------------- //
+
+extension MobiusTransformation : CustomDebugStringConvertible {
+  
+  @inlinable
+  public var debugDescription: String {
+    get {
+      return "MobiusTransformation<\(String(reflecting: Representation.self))>(a: \(self.a.debugDescription), b: \(self.b.debugDescription), c: \(self.c.debugDescription), d: \(self.d.debugDescription))"
+    }
+  }
+  
+}
+
+// -------------------------------------------------------------------------- //
 // MARK: MobiusTransformation - Codable
 // -------------------------------------------------------------------------- //
 
@@ -382,10 +468,6 @@ extension MobiusTransformation : Codable where Representation : Codable {
   
 }
 
-
-// -------------------------------------------------------------------------- //
-// MARK: MobiusTransformation.PreimagesOf - Validatable
-// -------------------------------------------------------------------------- //
 
 // MARK: Complex - Missing API
 
@@ -395,93 +477,12 @@ internal func canonicalizing<R:Real>(_ work: () throws -> Complex<R>) rethrows -
   return result.canonicalized
 }
 
-internal extension Complex {
-  
-  @usableFromInline
-  enum Characterization {
-    case zero
-    case infinity
-    case finiteNonZero(RealType,RealType)
-  }
-
-  @usableFromInline
-  enum CharacterizationType {
-    case zero
-    case infinity
-    case finiteNonZero
-  }
-  
-  @inlinable
-  var isOnRiemannSphere: Bool {
-    get {
-      // note: all combos of `infinity` and `nan` are equally the point at infinity
-      return true
-    }
-  }
-
-  @inlinable
-  var isFiniteNonZero: Bool {
-    get {
-      guard
-        self.isFinite,
-        self.isNonZero else {
-          return false
-      }
-      return true
-    }
-  }
-  
-  @inlinable
-  var isNonZero: Bool {
-    get {
-      return !self.isZero
-    }
-  }
-  
-  @inlinable
-  var isOne: Bool {
-    get {
-      return self == .one
-    }
-  }
-  
-  @inlinable
-  mutating func negate() {
-    self = -self
-  }
-  
-  @inlinable
-  var characterizationType: CharacterizationType {
-    get {
-      guard self.isNonZero else {
-        return .zero
-      }
-      guard self.isFinite else {
-        return .infinity
-      }
-      return .finiteNonZero
-    }
-  }
-  
-  @inlinable
-  mutating func formCanonicalization() {
-    switch self.characterizationType {
-    case .zero:
-      self = Self.zero
-    case .infinity:
-      self = Self.infinity
-    case .finiteNonZero:
-      self *= 1
-    }
-  }
-  
-}
-
 // -------------------------------------------------------------------------- //
 // MARK: MobiusTransformation - SymbolicCoefficient
 // -------------------------------------------------------------------------- //
 
 internal extension MobiusTransformation {
+  
   
   @usableFromInline
   typealias SC = SymbolicCoefficient
