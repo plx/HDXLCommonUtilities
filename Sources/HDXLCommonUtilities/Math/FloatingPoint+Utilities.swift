@@ -14,7 +14,7 @@ public extension FloatingPoint {
     to y: Self) -> Self {
     switch (x.isFinite,y.isFinite) {
     case (true, true):
-      return y - x
+      return abs(y - x)
     case (true, false):
       return .infinity
     case (false, true):

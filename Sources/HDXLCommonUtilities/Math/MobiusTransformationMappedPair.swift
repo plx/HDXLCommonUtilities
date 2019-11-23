@@ -88,7 +88,9 @@ internal extension MobiusTransformationMappedPair {
         lhs.w,
         rhs.w
       )
-    )  
+    )
+  }
+  
 }
 
 extension MobiusTransformationMappedPair : Validatable {

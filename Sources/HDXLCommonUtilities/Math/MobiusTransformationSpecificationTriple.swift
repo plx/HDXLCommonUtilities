@@ -8,7 +8,7 @@ import Numerics
 internal struct MobiusTransformationSpecificationTriple<Representation:Real> {
   
   @usableFromInline
-  internal typealias MappedPair = MobiusTransformation<Representation>
+  internal typealias MappedPair = MobiusTransformationMappedPair<Representation>
 
   @usableFromInline
   internal var _p1: MappedPair
@@ -221,9 +221,9 @@ extension MobiusTransformationSpecificationTriple : Equatable {
     pedantic_assert(rhs.isValid)
     // /////////////////////////////////////////////////////////////////////////
     guard
-      lhs.a == rhs.a,
-      lhs.b == rhs.b,
-      lhs.c == rhs.c else {
+      lhs.p1 == rhs.p1,
+      lhs.p2 == rhs.p2,
+      lhs.p3 == rhs.p3 else {
         return false
     }
     return true

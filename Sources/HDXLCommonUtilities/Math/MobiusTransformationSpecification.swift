@@ -39,7 +39,7 @@ internal final class MobiusTransformationSpecificationStorage<Representation:Rea
   internal typealias ComplexTriple = (Complex<Representation>,Complex<Representation>,Complex<Representation>)
     
   @usableFromInline
-  internal var p1: Pair {
+  internal var p1: MappedPair {
     willSet {
       // ///////////////////////////////////////////////////////////////////////
       pedantic_assert(newValue.isValid)
@@ -57,7 +57,7 @@ internal final class MobiusTransformationSpecificationStorage<Representation:Rea
   }
 
   @usableFromInline
-  internal var p2: Pair {
+  internal var p2: MappedPair {
     willSet {
       // ///////////////////////////////////////////////////////////////////////
       pedantic_assert(newValue.isValid)
@@ -75,7 +75,7 @@ internal final class MobiusTransformationSpecificationStorage<Representation:Rea
   }
 
   @usableFromInline
-  internal var p3: Pair {
+  internal var p3: MappedPair {
     willSet {
       // ///////////////////////////////////////////////////////////////////////
       pedantic_assert(newValue.isValid)
@@ -163,6 +163,14 @@ internal final class MobiusTransformationSpecificationStorage<Representation:Rea
   }
   
   @inlinable
+  internal var hasCachedPropertyValues: Bool {
+    get {
+      // more to come once I actually *get* to the interpolation functionality
+      return self._zs != nil || self._ws != nil
+    }
+  }
+  
+  @inlinable
   internal func actuallyResetCachedProperties() {
     self._zs = nil
     self._ws = nil
@@ -223,8 +231,8 @@ internal final class MobiusTransformationSpecificationStorage<Representation:Rea
   }
 
   @inlinable
-  internal init(
-    sending zs: ComplexTriple
+  internal convenience init(
+    sending zs: ComplexTriple,
     to ws: ComplexTriple) {
     // /////////////////////////////////////////////////////////////////////////
     pedantic_assert(
@@ -251,7 +259,7 @@ internal final class MobiusTransformationSpecificationStorage<Representation:Rea
   }
   
   @inlinable
-  internal init(
+  internal convenience init(
     forMappings p1: ComplexPair,
     _ p2: ComplexPair,
     _ p3: ComplexPair) {
@@ -396,7 +404,7 @@ extension MobiusTransformationSpecificationStorage : Codable where Representatio
   }
   
   @inlinable
-  internal init(from decoder: Decoder) throws {
+  internal convenience init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     let p1 = try values.decode(
       MappedPair.self,

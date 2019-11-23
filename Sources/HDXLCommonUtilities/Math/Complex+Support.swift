@@ -5,7 +5,82 @@
 import Foundation
 import Numerics
 
+@usableFromInline
+internal func canonicalizing<R:Real>(_ work: () throws -> Complex<R>) rethrows -> Complex<R> {
+  let result = try work()
+  return result.canonicalized
+}
+
+
+@inlinable
+internal func firstFiniteValue<R:Real>(
+  _ a: Complex<R>,
+  _ b: Complex<R>) -> Complex<R>? {
+  if a.isFinite {
+    return a
+  } else if b.isFinite {
+    return b
+  } else {
+    return nil
+  }
+}
+
+@inlinable
+internal func countOfInfinity<R:Real>(
+  _ a: Complex<R>) -> Int {
+  return countOfFalse(
+    a.isFinite
+  )
+}
+
+@inlinable
+internal func countOfInfinity<R:Real>(
+  _ a: Complex<R>,
+  _ b: Complex<R>) -> Int {
+  return countOfFalse(
+    a.isFinite,
+    b.isFinite
+  )
+}
+
+@inlinable
+internal func countOfInfinity<R:Real>(
+  _ a: Complex<R>,
+  _ b: Complex<R>,
+  _ c: Complex<R>) -> Int {
+  return countOfFalse(
+    a.isFinite,
+    b.isFinite,
+    c.isFinite
+  )
+}
+
+@inlinable
+internal func countOfInfinity<R:Real>(
+  _ a: Complex<R>,
+  _ b: Complex<R>,
+  _ c: Complex<R>,
+  _ d: Complex<R>) -> Int {
+  return countOfFalse(
+    a.isFinite,
+    b.isFinite,
+    c.isFinite,
+    d.isFinite
+  )
+}
+
+
 internal extension Complex {
+  
+  @inlinable
+  mutating func formFiniteProduct(with other: Complex<RealType>) {
+    // /////////////////////////////////////////////////////////////////////////
+    // TODO: consider demoting to `pedantic_assert`
+    precondition(self.isFinite)
+    precondition(other.isFinite)
+    // /////////////////////////////////////////////////////////////////////////
+    self *= other
+  }
   
   @inlinable
   static func structuralComparison(
@@ -68,6 +143,16 @@ internal extension Complex {
       from: self,
       to: other
     ) < epsilon
+  }
+
+  @inlinable
+  func hasInfinityNormDistance(
+    greaterThan epsilon: RealType,
+    to other: Complex<RealType>) -> Bool {
+    return epsilon < Complex<RealType>.infinityNormDistance(
+      from: self,
+      to: other
+    )
   }
 
   @usableFromInline

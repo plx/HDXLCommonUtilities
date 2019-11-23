@@ -10,6 +10,34 @@ import Numerics
 // -------------------------------------------------------------------------- //
 
 /// Prototype implementation of a `MobiusTransformation`.
+///
+/// - note:
+/// This looks suitable for `@frozen`, but there's a bit of caveat: numerical
+/// issues could at times make it so that, e.g., transformation that's supposed
+/// to send `z` to `infinity` only sends it to some very big number, instead; the
+/// chain of events would be `c*z + d` *should* be `0` but is, say, `1.1214124124e-323`
+/// (or some similar outcome, you get the idea).
+///
+/// As a temporary solution, there's the `applyWithFudging(to:fudgeFactor:)` that
+/// "corrupts" the naive result around the preimage of infinity and, instead, sends
+/// anything with sufficiently-small `c*z + d` to `infinity`. Not great, but good
+/// enough to verify the gist of the implementation (and for my purposes, anything
+/// sent to `infinity` will also be sent beyond (the edges of the screen), ergo
+/// sending nearby points to very large numbers is good enough.
+///
+/// That said, though, an alternative approach for transformations constructed
+/// to send specific `zs` to specific `ws` would be to preserve those `zs` and `ws`
+/// and ahdnle them as special-case values. This concept is currently confined within
+/// the type I'm calling `MobiusTransformationSpecification`, but after seeing this
+/// type in practice I may decide that that specification type's fucntionality makes
+/// for the better "fundamental primitive" (and, e.g., start treating `MobiusTransformation`
+/// with the concrete `a`, `b`, `c`, and `d` as a borderline-private implementation
+/// detail, generated only when necessary and otherwise *downstream* from that specification).
+///
+/// I won't know for sure until I have this in use in visual context *and* I
+/// experiment with interpolation as I've been planning, so, for now, I don't
+/// see myself making this type @frozen even though it looks as-if it could be.
+///
 public struct MobiusTransformation<Representation:Real> {
   
   public var a: Complex<Representation>
@@ -60,98 +88,34 @@ public extension MobiusTransformation {
     )
   }
   
+  /// Internal helper type used to calculate `a`, `b`, `c`, and `d` given triples
+  /// of `zs` and the corresponding `ws`.
   ///
-  /// - note: Temporary API; if experiment works out will reify these triples to a type for better interpolation.
+  /// - todo: Change from typealias => proper use of nested types
+  @usableFromInline
+  internal typealias TargetingFormula = MobiusTransformationTargetingFormula<Representation>
+  
+  /// Constructs the one-and-only transformation sending each `z` in `zs` to the
+  /// corresponding `w` in `ws`.
+  ///
+  /// - precondition: `zs` contains 3 *distinct* values
+  /// - precondition: `ws` contains 3 *distinct* values
+  ///
+  /// - postcondition: `f(z.i) = w.i` for each valid i (really: approximately-equal...)
   ///
   @inlinable
   init(
     sending zs: (Complex<Representation>, Complex<Representation>, Complex<Representation>),
     to ws: (Complex<Representation>, Complex<Representation>, Complex<Representation>)) {
+    let parameters = TargetingFormula.calculateMobiusTransformationParameters(
+      zs: zs,
+      ws: ws
+    )
     self.init(
-      z1: zs.0,
-      z2: zs.1,
-      z3: zs.2,
-      w1: ws.0,
-      w2: ws.1,
-      w3: ws.2
-    )
-  }
-  
-  /// Package-internal helper with the actual implementation of `init(sending:to:)`.
-  ///
-  /// Relies upon several purpose-built internal helpers, and in particular the
-  /// internal-use-only `SymbolicCoefficient` type defined below (and specifically
-  /// for this method); note that within *this* method it's abbreviated to `SC`,
-  ///
-  /// Conceptually, given proper triples `(z1, z2, z3)` and `(w1, w2, w3)` then
-  /// there is *exactly* one mobius transformation sending each `z` to the corresponding
-  /// `w`; citing wikipedia, there's an *almost* plug-and-chug formula for the
-  /// transformation's `a`, `b`, `c`, and `d`.
-  ///
-  /// The wrinkle is handling infinity: the `z`s and `w`s could each contain infinity,
-  /// and--further--specifying the point that gets sent to infinity is actually a rather
-  /// likely thing to do (or at least something I *expect* to do for my own purposes).
-  ///
-  /// The way to handle this is to use the symbolic formulas as-written, but *after* (a)
-  /// dividing by the infinite variables (and then taking the limit). Although in theory
-  /// we can't just "divide our matrix coefficients by infinity", in this case  we actually
-  /// can (as long we exercise a bit of caution).
-  ///
-  ///
-  @inlinable
-  internal init(
-    z1: Complex<Representation>,
-    z2: Complex<Representation>,
-    z3: Complex<Representation>,
-    w1: Complex<Representation>,
-    w2: Complex<Representation>,
-    w3: Complex<Representation>) {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(allArgumentsDistinct(z1,z2,z3))
-    pedantic_assert(allArgumentsDistinct(w1,w2,w3))
-    // /////////////////////////////////////////////////////////////////////////
-    let zInfinityCount = countOfInfinity(z1,z2,z3)
-    let wInfinityCount = countOfInfinity(w1,w2,w3)
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert((0...1).contains(zInfinityCount))
-    pedantic_assert((0...1).contains(wInfinityCount))
-    // /////////////////////////////////////////////////////////////////////////
-    
-    let infinityCount = zInfinityCount + wInfinityCount
-    
-    let a:Complex<Representation> = threeXThreeDeterminant(
-      SC(z1, w1), SC(w1), SC(.one),
-      SC(z2, w2), SC(w2), SC(.one),
-      SC(z3, w3), SC(w3), SC(.one),
-      afterDivisionByInfinityCount: infinityCount
-    )
-
-    let b:Complex<Representation> = threeXThreeDeterminant(
-      SC(z1, w1), SC(z1), SC(w1),
-      SC(z2, w2), SC(z2), SC(w2),
-      SC(z3, w3), SC(z3), SC(w3),
-      afterDivisionByInfinityCount: infinityCount
-    )
-
-    let c:Complex<Representation> = threeXThreeDeterminant(
-      SC(z1), SC(w1), SC(.one),
-      SC(z2), SC(w2), SC(.one),
-      SC(z3), SC(w3), SC(.one),
-      afterDivisionByInfinityCount: infinityCount
-    )
-
-    let d:Complex<Representation> = threeXThreeDeterminant(
-      SC(z1, w1), SC(z1), SC(.one),
-      SC(z2, w2), SC(z2), SC(.one),
-      SC(z3, w3), SC(z3), SC(.one),
-      afterDivisionByInfinityCount: infinityCount
-    )
-    
-    self.init(
-      a: a,
-      b: b,
-      c: c,
-      d: d
+      a: parameters.a,
+      b: parameters.b,
+      c: parameters.c,
+      d: parameters.d
     )
   }
   
@@ -162,12 +126,95 @@ public extension MobiusTransformation {
 // -------------------------------------------------------------------------- //
 
 public extension MobiusTransformation {
-  
+
+  @inlinable
+  func applyWithFudging(
+    to value: Complex<Representation>,
+    fudgeFactor epsilon: Representation) -> Complex<Representation> {
+    precondition(epsilon >= 0)
+    switch value.isFinite {
+    case true:
+      let upper = (self.a * value) + self.b
+      let lower = (self.c * value) + self.d
+      let distanceFromLowerToZero = Complex<Representation>.infinityNormDistance(
+        from: lower,
+        to: .zero        
+      )
+      guard distanceFromLowerToZero >= epsilon else {
+        // /////////////////////////////////////////////////////////////////////
+        // if a z exists s.t. lower == upper == zero
+        // z == -b/a == -d/c =>
+        // b/a == d/c =>
+        // cb == ad =>
+        // ad - cb == 0,
+        //
+        // ...but recall that we require `ad-bc != 0` (and try to enforce @ type level).
+        pedantic_assert(!upper.isZero)
+        // /////////////////////////////////////////////////////////////////////
+        return .infinity
+      }
+      return upper/lower
+    case false:
+      // *note*: at time of implementation, I believe that `self.a/self.c`
+      // should "just work" identically to what we have below.
+      //
+      // I'm still making it explicit b/c (a) I initially didn't think of the
+      // need to do special-handling for this case and (b) I don't want the
+      // correctness of this case to hinge on what's currently a potentially-mutable
+      // implementation detail of `Complex`.
+      switch (self.a.isZero, self.c.isZero) {
+      case (false,false):
+        return self.a/self.c
+      case (false,true):
+        return .infinity
+      case (true,false):
+        return .zero
+      case (true,true):
+        preconditionFailure("Encountered invalid mobius transformation with `a` and `c` identically-zero")
+      }
+    }
+  }
+
   @inlinable
   func apply(to value: Complex<Representation>) -> Complex<Representation> {
-    let upper = (self.a * value) + b
-    let lower = (self.c * value) + d
-    return upper/lower
+    switch value.isFinite {
+    case true:
+      let upper = (self.a * value) + self.b
+      let lower = (self.c * value) + self.d
+      // specio
+      guard !lower.isZero else {
+        // /////////////////////////////////////////////////////////////////////
+        // if a z exists s.t. lower == upper == zero
+        // z == -b/a == -d/c =>
+        // b/a == d/c =>
+        // cb == ad =>
+        // ad - cb == 0,
+        //
+        // ...but recall that we require `ad-bc != 0` (and try to enforce @ type level).
+        pedantic_assert(!upper.isZero)
+        // /////////////////////////////////////////////////////////////////////
+        return .infinity
+      }
+      return upper/lower
+    case false:
+      // *note*: at time of implementation, I believe that `self.a/self.c`
+      // should "just work" identically to what we have below.
+      //
+      // I'm still making it explicit b/c (a) I initially didn't think of the
+      // need to do special-handling for this case and (b) I don't want the
+      // correctness of this case to hinge on what's currently a potentially-mutable
+      // implementation detail of `Complex`.
+      switch (self.a.isZero, self.c.isZero) {
+      case (false,false):
+        return self.a/self.c
+      case (false,true):
+        return .infinity
+      case (true,false):
+        return .zero
+      case (true,true):
+        preconditionFailure("Encountered invalid mobius transformation with `a` and `c` identically-zero")
+      }
+    }
   }
   
   // TODO: bulk-application wherein we use the currently-named `reciprocal` API
@@ -466,203 +513,4 @@ extension MobiusTransformation : CustomDebugStringConvertible {
 
 extension MobiusTransformation : Codable where Representation : Codable {
   
-}
-
-
-// MARK: Complex - Missing API
-
-@usableFromInline
-internal func canonicalizing<R:Real>(_ work: () throws -> Complex<R>) rethrows -> Complex<R> {
-  let result = try work()
-  return result.canonicalized
-}
-
-// -------------------------------------------------------------------------- //
-// MARK: MobiusTransformation - SymbolicCoefficient
-// -------------------------------------------------------------------------- //
-
-internal extension MobiusTransformation {
-  
-  
-  @usableFromInline
-  typealias SC = SymbolicCoefficient
-  
-  @usableFromInline
-  enum SymbolicCoefficient {
-    case simple(Complex<Representation>)
-    case product(Complex<Representation>, Complex<Representation>)
-    
-    @inlinable
-    init(_ coefficient: Complex<Representation>) {
-      self = .simple(coefficient)
-    }
-    
-    @inlinable
-    init(_ lhs: Complex<Representation>, _ rhs: Complex<Representation>) {
-      self = .product(lhs, rhs)
-    }
-    
-    @inlinable
-    var infinityCount: Int {
-      get {
-        switch self {
-        case .simple(let value):
-          return countOfInfinity(value)
-        case .product(let lhs, let rhs):
-          return countOfInfinity(lhs, rhs)
-        }
-      }
-    }
-    
-    @inlinable
-    var directRealization: Complex<Representation> {
-      get {
-        switch self {
-        case .simple(let value):
-          precondition(value.isFinite)
-          return value
-        case .product(let lhs, let rhs):
-          precondition(lhs.isFinite)
-          precondition(rhs.isFinite)
-          return lhs * rhs
-        }
-      }
-    }
-    
-    
-    @inlinable
-    func realized(afterDivisionByInfinityCount divisionInfinityCount: Int) -> Complex<Representation> {
-      precondition((0...2).contains(divisionInfinityCount))
-      precondition(self.infinityCount <= divisionInfinityCount)
-      guard divisionInfinityCount > 0 else {
-        return self.directRealization
-      }
-      switch self.infinityCount <=> divisionInfinityCount {
-      case .orderedAscending:
-        // dividing by more infinity than we have
-        return Complex<Representation>.zero
-      case .orderedSame:
-        switch self {
-        case .simple(let value):
-          // ///////////////////////////////////////////////////////////////////
-          pedantic_assert(!value.isFinite)
-          // ///////////////////////////////////////////////////////////////////
-          return Complex<Representation>.one
-        case .product(let lhs, let rhs):
-          // ///////////////////////////////////////////////////////////////////
-          pedantic_assert(lhs.isFinite || rhs.isFinite)
-          // ///////////////////////////////////////////////////////////////////
-          return firstFiniteValue(lhs, rhs) ?? Complex<Representation>.one
-        }
-      case .orderedDescending:
-        preconditionFailure(
-          """
-          Shouldn't actually hit this branch: all symbolic coefficients *in intended use* will have `infinityCount` <= the `divisionInfinityCount`.
-          """
-        )
-      }
-    }
-  }
-  
-}
-
-@inlinable
-internal func countOfInfinity<R:Real>(
-  _ a: Complex<R>) -> Int {
-  return countOfFalse(
-    a.isFinite
-  )
-}
-
-@inlinable
-internal func countOfInfinity<R:Real>(
-  _ a: Complex<R>,
-  _ b: Complex<R>) -> Int {
-  return countOfFalse(
-    a.isFinite,
-    b.isFinite
-  )
-}
-
-@inlinable
-internal func countOfInfinity<R:Real>(
-  _ a: Complex<R>,
-  _ b: Complex<R>,
-  _ c: Complex<R>) -> Int {
-  return countOfFalse(
-    a.isFinite,
-    b.isFinite,
-    c.isFinite
-  )
-}
-
-@inlinable
-internal func firstFiniteValue<R:Real>(
-  _ a: Complex<R>,
-  _ b: Complex<R>) -> Complex<R>? {
-  if a.isFinite {
-    return a
-  } else if b.isFinite {
-    return b
-  } else {
-    return nil
-  }
-}
-
-@inlinable
-internal func twoXTwoDeterminant<T:SignedNumeric>(
-  _ x11: T, _ x12: T,
-  _ x21: T, _ x22: T) -> T {
-  return x11 * x22 - x12 * x21
-}
-
-@inlinable
-internal func threeXThreeDeterminant<T:SignedNumeric>(
-  _ x11: T, _ x12: T, _ x13: T,
-  _ x21: T, _ x22: T, _ x23: T,
-  _ x31: T, _ x32: T, _ x33: T) -> T {
-  let x11Contribution = x11 * twoXTwoDeterminant(
-    x22, x23,
-    x32, x33
-  )
-  let x12Contribution = -x12 * twoXTwoDeterminant(
-    x21, x23,
-    x31, x33
-  )
-  let x13Contribution = x13 * twoXTwoDeterminant(
-    x21, x22,
-    x31, x32
-  )
-  return (
-    x11Contribution
-    +
-    x12Contribution
-    +
-    x13Contribution
-  )
-}
-
-@inlinable
-internal func threeXThreeDeterminant<R:Real>(
-  _ x11: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x12: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x13: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x21: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x22: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x23: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x31: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x32: MobiusTransformation<R>.SymbolicCoefficient,
-  _ x33: MobiusTransformation<R>.SymbolicCoefficient,
-  afterDivisionByInfinityCount divisionInfinityCount: Int) -> Complex<R> {
-  return threeXThreeDeterminant(
-    x11.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x12.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x13.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x21.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x22.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x23.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x31.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x32.realized(afterDivisionByInfinityCount: divisionInfinityCount),
-    x33.realized(afterDivisionByInfinityCount: divisionInfinityCount)
-  )
 }
