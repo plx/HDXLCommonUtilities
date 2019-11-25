@@ -195,7 +195,7 @@ public protocol SemanticEquivalenceComparable : Equatable {
   /// Check for favorability vis-a-vis `other` (and *only* for favorability).
   ///
   /// Allowed to have GIGO/undefined results when called on `self` and `other`
-  /// that have distinct semantics.
+  /// that have *distinct* semantics.
   ///
   /// *Users* who only need to know "which is favored" should call this just-in-case
   /// the type has provided a more-efficient, specialized implementation.

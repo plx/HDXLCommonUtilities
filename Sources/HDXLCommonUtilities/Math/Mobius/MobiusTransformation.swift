@@ -39,12 +39,41 @@ import Numerics
 /// see myself making this type @frozen even though it looks as-if it could be.
 ///
 public struct MobiusTransformation<Representation:Real> {
+
+  // ------------------------------------------------------------------------ //
+  // MARK: Exported Typealiases
+  // ------------------------------------------------------------------------ //
+  
+  public typealias ComplexPair = (Complex<Representation>,Complex<Representation>)
+  public typealias ComplexTriple = (Complex<Representation>,Complex<Representation>,Complex<Representation>)
+
+  // ------------------------------------------------------------------------ //
+  // MARK: Stored Properties
+  // ------------------------------------------------------------------------ //
   
   public var a: Complex<Representation>
   public var b: Complex<Representation>
   public var c: Complex<Representation>
   public var d: Complex<Representation>
-  
+
+  // ------------------------------------------------------------------------ //
+  // MARK: Primary Initialization
+  // ------------------------------------------------------------------------ //
+
+  /// Componentwise "designated initializer": the constructed transform will be
+  /// equivalent-to `h(z) = (az + b)/(cz +d)`.
+  ///
+  /// - parameter a: The standard `a` coefficient.
+  /// - parameter b: The standard `b` coefficient.
+  /// - parameter c: The standard `c` coefficient.
+  /// - parameter d: The standard `d` coefficient.
+  ///
+  /// - precondition: `a.isFinite`
+  /// - precondition: `b.isFinite`
+  /// - precondition: `c.isFinite`
+  /// - precondition: `d.isFinite`
+  /// - precondition: `a*d - b * c != 0`
+  ///
   @inlinable
   public init(
     a: Complex<Representation>,
@@ -105,8 +134,8 @@ public extension MobiusTransformation {
   ///
   @inlinable
   init(
-    sending zs: (Complex<Representation>, Complex<Representation>, Complex<Representation>),
-    to ws: (Complex<Representation>, Complex<Representation>, Complex<Representation>)) {
+    sending zs: ComplexTriple,
+    to ws: ComplexTriple) {
     let parameters = TargetingFormula.calculateMobiusTransformationParameters(
       zs: zs,
       ws: ws
@@ -117,6 +146,23 @@ public extension MobiusTransformation {
       c: parameters.c,
       d: parameters.d
     )
+  }
+    
+  @inlinable
+  static func canConstructTransformation(
+    sending zs: ComplexTriple,
+    to ws: ComplexTriple) -> Bool {
+    guard
+      allArgumentsDistinct(zs.0,zs.1,zs.2),
+      allArgumentsDistinct(ws.0,ws.1,ws.2),
+      countOfTrue(
+        zs.0 == ws.0,
+        zs.1 == ws.1,
+        zs.2 == ws.2
+        ) <= 2 else {
+          return false
+    }
+    return true
   }
   
 }
