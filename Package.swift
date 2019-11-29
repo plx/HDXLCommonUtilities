@@ -16,13 +16,13 @@ let package = Package(
     .library(
       name: "HDXLCommonUtilities",
       targets: ["HDXLCommonUtilities"]
-    ),
-    .library(
-      name: "HDXLTestingUtilities",
-      targets: ["HDXLTestingUtilities"]
     )
   ],
   dependencies: [
+    .package(
+      url: "https://github.com/plx/HDXLTestingUtilities",
+      from: "0.0.1"
+    ),
     .package(
       url: "https://github.com/apple/swift-numerics",
       from: "0.0.1"
@@ -37,29 +37,12 @@ let package = Package(
       name: "HDXLCommonUtilities",
       dependencies: ["Numerics"]
     ),
-    .target(
-      name: "HDXLTestingUtilities",
-      dependencies: ["HDXLCommonUtilities"]
-    ),
     .testTarget(
       name: "HDXLCommonUtilitiesTests",
       dependencies: [
         "HDXLCommonUtilities",
-        "HDXLTestingUtilities"
-      ]
-    ),
-    .testTarget(
-      name: "HDXLTestingUtilitiesTests",
-      dependencies: [
-        "HDXLCommonUtilities",
-        "HDXLTestingUtilities"
-      ]
-    ),
-    .testTarget(
-      name: "HDXLCollectionValidationTests",
-      dependencies: [
-        "HDXLCommonUtilities",
-        "HDXLTestingUtilities"
+        "HDXLTestingUtilities",
+        "Numerics"
       ]
     )
   ],

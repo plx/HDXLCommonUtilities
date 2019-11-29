@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "HDXLTestingUtilities",
+        "repositoryURL": "https://github.com/plx/HDXLTestingUtilities",
+        "state": {
+          "branch": null,
+          "revision": "8a5e685941169110263f7e452c8b7307437f8f56",
+          "version": "0.0.1"
+        }
+      },
+      {
         "package": "swift-numerics",
         "repositoryURL": "https://github.com/apple/swift-numerics",
         "state": {
