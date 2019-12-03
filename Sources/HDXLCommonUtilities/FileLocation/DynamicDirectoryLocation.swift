@@ -262,17 +262,7 @@ extension DynamicDirectoryLocation : Equatable {
     // /////////////////////////////////////////////////////////////////////////
     return lhs.storage == rhs.storage
   }
-  
-  @inlinable
-  public static func !=(
-    lhs: DynamicDirectoryLocation,
-    rhs: DynamicDirectoryLocation) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.storage != rhs.storage
-  }
+
 }
 
 // -------------------------------------------------------------------------- //

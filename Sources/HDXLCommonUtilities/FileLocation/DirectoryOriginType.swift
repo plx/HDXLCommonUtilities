@@ -38,13 +38,6 @@ extension DirectoryOriginType : Equatable {
     return lhs.rawValue == rhs.rawValue
   }
 
-  @inlinable
-  public static func !=(
-    lhs: DirectoryOriginType,
-    rhs: DirectoryOriginType) -> Bool {
-    return lhs.rawValue != rhs.rawValue
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

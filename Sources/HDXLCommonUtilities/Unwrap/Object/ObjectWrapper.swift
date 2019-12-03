@@ -89,17 +89,6 @@ extension ObjectWrapper : Equatable {
     return lhs.objectIdentifier == rhs.objectIdentifier
   }
 
-  @inlinable
-  public static func !=(
-    lhs: ObjectWrapper<WrappedObject>,
-    rhs: ObjectWrapper<WrappedObject>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.objectIdentifier != rhs.objectIdentifier
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

@@ -68,18 +68,6 @@ extension DirectorySearchParameters : Equatable {
     return true
   }
 
-  @inlinable
-  public static func !=(
-    lhs: DirectorySearchParameters,
-    rhs: DirectorySearchParameters) -> Bool {
-    guard
-      lhs.directory.rawValue == rhs.directory.rawValue,
-      lhs.mask.rawValue == rhs.mask.rawValue else {
-        return true
-    }
-    return false
-  }
-
 }
 
 extension DirectorySearchParameters : Hashable {

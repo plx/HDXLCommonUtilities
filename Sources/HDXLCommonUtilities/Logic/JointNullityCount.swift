@@ -217,22 +217,6 @@ extension JointNullityCount : Equatable {
     return true
   }
 
-  @inlinable
-  public static func !=(
-    lhs: JointNullityCount,
-    rhs: JointNullityCount) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    guard
-      lhs.countOfNil == rhs.countOfNil,
-      lhs.countOfNonNil == rhs.countOfNonNil else {
-        return true
-    }
-    return false
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

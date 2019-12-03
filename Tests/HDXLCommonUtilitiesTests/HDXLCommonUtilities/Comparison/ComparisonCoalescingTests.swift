@@ -5,19 +5,11 @@
 import Foundation
 import XCTest
 @testable import HDXLCommonUtilities
+import HDXLTestingUtilities
 
 class ComparisonCoalescingTests: XCTestCase {
 
   let values: [ComparisonResult] = [.orderedAscending, .orderedSame, .orderedDescending]
-  
-  lazy var arity2Probes = CartesianProduct(self.values, self.values)
-  lazy var arity3Probes = CartesianProduct(self.values, self.values, self.values)
-  lazy var arity4Probes = CartesianProduct(self.values, self.values, self.values, self.values)
-  lazy var arity5Probes = CartesianProduct(self.values, self.values, self.values, self.values, self.values)
-  lazy var arity6Probes = CartesianProduct(self.values, self.values, self.values, self.values, self.values, self.values)
-  lazy var arity7Probes = CartesianProduct(self.values, self.values, self.values, self.values, self.values, self.values, self.values)
-  lazy var arity8Probes = CartesianProduct(self.values, self.values, self.values, self.values, self.values, self.values, self.values, self.values)
-  lazy var arity9Probes = CartesianProduct(self.values, self.values, self.values, self.values, self.values, self.values, self.values, self.values, self.values)
   
   private func manuallyCoalesce(results: [ComparisonResult]) -> ComparisonResult {
     return results.first(where: { $0 != .orderedSame}) ?? .orderedSame
@@ -102,9 +94,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity2Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity2Probes {
+      self.enumerateArity2Probes() {
+        (probe: A2P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b
@@ -116,9 +110,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity3Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity3Probes {
+      self.enumerateArity3Probes() {
+        (probe: A3P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -131,9 +127,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity4Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity4Probes {
+      self.enumerateArity4Probes() {
+        (probe: A4P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -147,9 +145,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity5Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity5Probes {
+      self.enumerateArity5Probes() {
+        (probe: A5P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -164,9 +164,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity6Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity6Probes {
+      self.enumerateArity6Probes() {
+        (probe: A6P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -182,9 +184,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity7Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity7Probes {
+      self.enumerateArity7Probes() {
+        (probe: A7P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -201,9 +205,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity8Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity8Probes {
+      self.enumerateArity8Probes() {
+        (probe: A8P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -221,9 +227,11 @@ class ComparisonCoalescingTests: XCTestCase {
 
   func testArity9Coalescence() {
     self.haltingOnFirstError {
-      for probe in self.arity9Probes {
+      self.enumerateArity9Probes() {
+        (probe: A9P) -> Void
+        in
         XCTAssertEqual(
-          self.manuallyCoalesce(results: probe.allValues),
+          self.manuallyCoalesce(results: Array(probe)),
           ComparisonResult.coalescing(
             probe.a,
             probe.b,
@@ -240,4 +248,73 @@ class ComparisonCoalescingTests: XCTestCase {
     }
   }
 
+}
+
+fileprivate extension ComparisonCoalescingTests {
+  
+  typealias A2P = UniformArity2Probe<ComparisonResult>
+  typealias A3P = UniformArity3Probe<ComparisonResult>
+  typealias A4P = UniformArity4Probe<ComparisonResult>
+  typealias A5P = UniformArity5Probe<ComparisonResult>
+  typealias A6P = UniformArity6Probe<ComparisonResult>
+  typealias A7P = UniformArity7Probe<ComparisonResult>
+  typealias A8P = UniformArity8Probe<ComparisonResult>
+  typealias A9P = UniformArity9Probe<ComparisonResult>
+
+  func enumerateArity2Probes(using visitor: (A2P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity3Probes(using visitor: (A3P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity4Probes(using visitor: (A4P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity5Probes(using visitor: (A5P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity6Probes(using visitor: (A6P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity7Probes(using visitor: (A7P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity8Probes(using visitor: (A8P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+
+  func enumerateArity9Probes(using visitor: (A9P) -> Void) {
+    EnumerateUniformProbes(
+      self.values,
+      using: visitor
+    )
+  }
+  
 }

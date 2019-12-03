@@ -144,22 +144,6 @@ extension BucketCollection : Equatable {
     return true
   }
 
-  @inlinable
-  public static func !=(
-    lhs: BucketCollection<Representation>,
-    rhs: BucketCollection<Representation>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    guard
-      lhs.valueRange == rhs.valueRange,
-      lhs.bucketSize == rhs.bucketSize else {
-        return true
-    }
-    return false
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

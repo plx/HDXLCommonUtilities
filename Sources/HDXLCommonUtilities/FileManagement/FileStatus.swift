@@ -108,13 +108,6 @@ extension FileStatus : Equatable {
     return lhs.rawValue == rhs.rawValue
   }
 
-  @inlinable
-  public static func !=(
-    lhs: FileStatus,
-    rhs: FileStatus) -> Bool {
-    return lhs.rawValue != rhs.rawValue
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

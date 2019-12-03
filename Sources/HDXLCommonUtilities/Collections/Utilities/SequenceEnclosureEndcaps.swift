@@ -140,18 +140,6 @@ extension SequenceEnclosureEndcaps : Equatable {
     return true
   }
 
-  @inlinable
-  public static func !=(
-    lhs: SequenceEnclosureEndcaps,
-    rhs: SequenceEnclosureEndcaps) -> Bool {
-    guard
-      lhs.initial == rhs.initial,
-      lhs.terminal == rhs.terminal else {
-        return true
-    }
-    return false
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

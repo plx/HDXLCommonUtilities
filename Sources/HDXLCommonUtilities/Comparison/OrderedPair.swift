@@ -220,22 +220,6 @@ extension OrderedPair : Equatable {
     return true
   }
 
-  @inlinable
-  public static func !=(
-    lhs: OrderedPair<T>,
-    rhs: OrderedPair<T>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    guard
-      lhs.lesser == rhs.lesser,
-      lhs.greater == rhs.greater else {
-        return true
-    }
-    return false
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

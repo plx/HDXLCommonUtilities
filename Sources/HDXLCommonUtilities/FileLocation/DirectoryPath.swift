@@ -82,17 +82,6 @@ extension DirectoryPath : Equatable {
     return lhs.storage == rhs.storage
   }
 
-  @inlinable
-  public static func !=(
-    lhs: DirectoryPath,
-    rhs: DirectoryPath) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.storage != rhs.storage
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

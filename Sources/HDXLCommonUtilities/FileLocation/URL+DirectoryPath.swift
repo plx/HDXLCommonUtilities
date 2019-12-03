@@ -1,4 +1,4 @@
-//
+ //
 //  URL+DirectoryPath.swift
 //
 
@@ -39,7 +39,12 @@ public extension URL {
     pedantic_assert(self.isFileURL)
     pedantic_assert(self.hasDirectoryPath)
     // /////////////////////////////////////////////////////////////////////////
-    for component in ChainCollection(directoryPath1.storage, directoryPath2.storage) {
+    // *was* using `ChainCollection`, but don't want to drag the algebraic-collection
+    // system into the base utilities package!
+    for component in directoryPath1.storage {
+      self.appendPathComponent(component)
+    }
+    for component in directoryPath2.storage {
       self.appendPathComponent(component)
     }
   }

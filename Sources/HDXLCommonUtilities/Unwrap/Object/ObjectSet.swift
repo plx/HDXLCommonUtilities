@@ -43,13 +43,6 @@ extension ObjectSet : Equatable {
     return lhs.storage == rhs.storage
   }
 
-  @inlinable
-  public static func !=(
-    lhs: ObjectSet<Element>,
-    rhs: ObjectSet<Element>) -> Bool {
-    return lhs.storage != rhs.storage
-  }
-
 }
 
 // -------------------------------------------------------------------------- //
@@ -811,13 +804,6 @@ extension ObjectSetIndex : Equatable {
     lhs: ObjectSetIndex<Element>,
     rhs: ObjectSetIndex<Element>) -> Bool {
     return lhs.storage == rhs.storage
-  }
-
-  @inlinable
-  public static func !=(
-    lhs: ObjectSetIndex<Element>,
-    rhs: ObjectSetIndex<Element>) -> Bool {
-    return lhs.storage != rhs.storage
   }
 
 }

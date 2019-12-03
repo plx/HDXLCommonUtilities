@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/plx/HDXLTestingUtilities",
         "state": {
           "branch": null,
-          "revision": "8a5e685941169110263f7e452c8b7307437f8f56",
-          "version": "0.0.1"
+          "revision": "f22c1c3cf0cc041799a929b76244702598b49f14",
+          "version": "0.0.5"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/apple/swift-numerics",
         "state": {
           "branch": null,
-          "revision": "4329602833699f30a9affaa94ab06d1934aac46c",
-          "version": "0.0.1"
+          "revision": "7ff707f6f8c7d8aaac365475632892e2da581b6a",
+          "version": "0.0.3"
         }
       }
     ]

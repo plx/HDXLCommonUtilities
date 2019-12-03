@@ -24,6 +24,7 @@ import Foundation
 /// ...and so on and so forth. The reason this type *really* exists is thus to avoid a combinatorial explosion
 /// of all possible concrete combinations of "object collections", but it's still better to use the more-concrete types
 /// whenever you possibly can.
+@frozen
 public struct ObjectCollectionWrapper<Element,WrappedCollection>
   where
   Element:AnyObject,
@@ -79,13 +80,6 @@ extension ObjectCollectionWrapper : Equatable where WrappedCollection:Equatable 
     lhs: ObjectCollectionWrapper<Element,WrappedCollection>,
     rhs: ObjectCollectionWrapper<Element,WrappedCollection>) -> Bool {
     return lhs.wrappedCollection == rhs.wrappedCollection
-  }
-
-  @inlinable
-  public static func !=(
-    lhs: ObjectCollectionWrapper<Element,WrappedCollection>,
-    rhs: ObjectCollectionWrapper<Element,WrappedCollection>) -> Bool {
-    return lhs.wrappedCollection != rhs.wrappedCollection
   }
 
 }
@@ -706,14 +700,7 @@ extension ObjectCollectionWrapperIndex : Equatable {
     rhs: ObjectCollectionWrapperIndex<Element,WrappedCollection>) -> Bool {
     return lhs.storage == rhs.storage
   }
-  
-  @inlinable
-  public static func !=(
-    lhs: ObjectCollectionWrapperIndex<Element,WrappedCollection>,
-    rhs: ObjectCollectionWrapperIndex<Element,WrappedCollection>) -> Bool {
-    return lhs.storage != rhs.storage
-  }
-  
+    
 }
 
 // -------------------------------------------------------------------------- //

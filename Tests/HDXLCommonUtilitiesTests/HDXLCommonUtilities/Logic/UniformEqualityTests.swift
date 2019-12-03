@@ -5,22 +5,14 @@
 import Foundation
 import XCTest
 @testable import HDXLCommonUtilities
+import HDXLTestingUtilities
 
 class UniformEqualityTests: XCTestCase {
   
   let v: [Int] = [
     1,2,3
   ]
-  
-  lazy var arity2Probes = InlineCartesianProduct(self.v, self.v)
-  lazy var arity3Probes = InlineCartesianProduct(self.v, self.v, self.v)
-  lazy var arity4Probes = InlineCartesianProduct(self.v, self.v, self.v, self.v)
-  lazy var arity5Probes = InlineCartesianProduct(self.v, self.v, self.v, self.v, self.v)
-  lazy var arity6Probes = InlineCartesianProduct(self.v, self.v, self.v, self.v, self.v, self.v)
-  lazy var arity7Probes = InlineCartesianProduct(self.v, self.v, self.v, self.v, self.v, self.v, self.v)
-  lazy var arity8Probes = InlineCartesianProduct(self.v, self.v, self.v, self.v, self.v, self.v, self.v, self.v)
-  lazy var arity9Probes = InlineCartesianProduct(self.v, self.v, self.v, self.v, self.v, self.v, self.v, self.v, self.v)
-  
+    
   private func uniqueValueCountIsOne(for values: [Int]) -> Bool {
     precondition(!values.isEmpty)
     var minimum = values[0]
@@ -64,9 +56,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity2UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity2Probes {
+      self.enumerateArity2Probes() {
+        (probe: A2P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b
@@ -78,9 +72,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity3UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity3Probes {
+      self.enumerateArity3Probes() {
+        (probe: A3P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -93,9 +89,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity4UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity4Probes {
+      self.enumerateArity4Probes() {
+        (probe: A4P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -109,9 +107,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity5UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity5Probes {
+      self.enumerateArity5Probes() {
+        (probe: A5P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -126,9 +126,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity6UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity6Probes {
+      self.enumerateArity6Probes() {
+        (probe: A6P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -144,9 +146,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity7UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity7Probes {
+      self.enumerateArity7Probes() {
+        (probe: A7P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -163,9 +167,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity8UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity8Probes {
+      self.enumerateArity8Probes() {
+        (probe: A8P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -183,9 +189,11 @@ class UniformEqualityTests: XCTestCase {
 
   func testArity9UniformEquality() {
     self.haltingOnFirstError {
-      for probe in self.arity9Probes {
+      self.enumerateArity9Probes() {
+        (probe: A9P) -> Void
+        in
         XCTAssertEqual(
-          self.uniqueValueCountIsOne(for: probe.allValues),
+          self.uniqueValueCountIsOne(for: Array(probe)),
           allArgumentsMutuallyEqual(
             probe.a,
             probe.b,
@@ -202,4 +210,73 @@ class UniformEqualityTests: XCTestCase {
     }
   }
 
+}
+
+fileprivate extension UniformEqualityTests {
+  
+  typealias A2P = UniformArity2Probe<Int>
+  typealias A3P = UniformArity3Probe<Int>
+  typealias A4P = UniformArity4Probe<Int>
+  typealias A5P = UniformArity5Probe<Int>
+  typealias A6P = UniformArity6Probe<Int>
+  typealias A7P = UniformArity7Probe<Int>
+  typealias A8P = UniformArity8Probe<Int>
+  typealias A9P = UniformArity9Probe<Int>
+
+  func enumerateArity2Probes(using visitor: (A2P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity3Probes(using visitor: (A3P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity4Probes(using visitor: (A4P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity5Probes(using visitor: (A5P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity6Probes(using visitor: (A6P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity7Probes(using visitor: (A7P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity8Probes(using visitor: (A8P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+
+  func enumerateArity9Probes(using visitor: (A9P) -> Void) {
+    EnumerateUniformProbes(
+      self.v,
+      using: visitor
+    )
+  }
+  
 }

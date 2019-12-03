@@ -17,33 +17,22 @@ class NullityCountingTests: XCTestCase {
   let gg: [Int?] = [7, nil]
   let hh: [Int?] = [8, nil]
   let ii: [Int?] = [9, nil]
-  
-  lazy var arity2Probes = InlineCartesianProduct(self.aa, self.bb)
-  lazy var arity3Probes = InlineCartesianProduct(self.aa, self.bb, self.cc)
-  lazy var arity4Probes = InlineCartesianProduct(self.aa, self.bb, self.cc, self.dd)
-  lazy var arity5Probes = InlineCartesianProduct(self.aa, self.bb, self.cc, self.dd, self.ee)
-  lazy var arity6Probes = InlineCartesianProduct(self.aa, self.bb, self.cc, self.dd, self.ee, self.ff)
-  lazy var arity7Probes = InlineCartesianProduct(self.aa, self.bb, self.cc, self.dd, self.ee, self.ff, self.gg)
-  lazy var arity8Probes = InlineCartesianProduct(self.aa, self.bb, self.cc, self.dd, self.ee, self.ff, self.gg, self.hh)
-  lazy var arity9Probes = InlineCartesianProduct(self.aa, self.bb, self.cc, self.dd, self.ee, self.ff, self.gg, self.hh, self.ii)
 
   func testArity2NullityCounts() {
     self.haltingOnFirstError {
       let arity = 2
-      for p in self.arity2Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity2Probes() {
+        (p: Arity2Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b)
         let nNilCount =    countOfNonNil(p.a,p.b)
         let jNilCount = countOfNilStatus(p.a,p.b)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -93,20 +82,18 @@ class NullityCountingTests: XCTestCase {
   func testArity3NullityCounts() {
     self.haltingOnFirstError {
       let arity = 3
-      for p in self.arity3Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity3Probes() {
+        (p: Arity3Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -156,20 +143,18 @@ class NullityCountingTests: XCTestCase {
   func testArity4NullityCounts() {
     self.haltingOnFirstError {
       let arity = 4
-      for p in self.arity4Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity4Probes() {
+        (p: Arity4Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c,p.d)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c,p.d)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c,p.d)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -219,20 +204,18 @@ class NullityCountingTests: XCTestCase {
   func testArity5NullityCounts() {
     self.haltingOnFirstError {
       let arity = 5
-      for p in self.arity5Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity5Probes() {
+        (p: Arity5Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c,p.d,p.e)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c,p.d,p.e)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c,p.d,p.e)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -282,22 +265,12 @@ class NullityCountingTests: XCTestCase {
   func testArity6NullityCounts() {
     self.haltingOnFirstError {
       let arity = 6
-      for p in self.arity6Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity6Probes() {
+        (p: Arity6Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c,p.d,p.e,p.f)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c,p.d,p.e,p.f)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c,p.d,p.e,p.f)
-        XCTAssertEqual(
-          type(of: p).arity,
-          yNilCount + nNilCount
-        )
-        XCTAssertEqual(
-          type(of: p).arity,
-          jNilCount.count
-        )
         XCTAssertEqual(
           yNilCount,
           jNilCount.countOfNil
@@ -345,20 +318,18 @@ class NullityCountingTests: XCTestCase {
   func testArity7NullityCounts() {
     self.haltingOnFirstError {
       let arity = 7
-      for p in self.arity7Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity7Probes() {
+        (p: Arity7Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c,p.d,p.e,p.f,p.g)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c,p.d,p.e,p.f,p.g)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c,p.d,p.e,p.f,p.g)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -408,20 +379,18 @@ class NullityCountingTests: XCTestCase {
   func testArity8NullityCounts() {
     self.haltingOnFirstError {
       let arity = 8
-      for p in self.arity8Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity8Probes() {
+        (p: Arity8Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c,p.d,p.e,p.f,p.g,p.h)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c,p.d,p.e,p.f,p.g,p.h)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c,p.d,p.e,p.f,p.g,p.h)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -471,20 +440,18 @@ class NullityCountingTests: XCTestCase {
   func testArity9NullityCounts() {
     self.haltingOnFirstError {
       let arity = 9
-      for p in self.arity9Probes {
-        XCTAssertEqual(
-          arity,
-          type(of: p).arity
-        )
+      self.enumerateArity9Probes() {
+        (p: Arity9Probe<Int?>) -> Void
+        in
         let yNilCount =       countOfNil(p.a,p.b,p.c,p.d,p.e,p.f,p.g,p.h,p.i)
         let nNilCount =    countOfNonNil(p.a,p.b,p.c,p.d,p.e,p.f,p.g,p.h,p.i)
         let jNilCount = countOfNilStatus(p.a,p.b,p.c,p.d,p.e,p.f,p.g,p.h,p.i)
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           yNilCount + nNilCount
         )
         XCTAssertEqual(
-          type(of: p).arity,
+          arity,
           jNilCount.count
         )
         XCTAssertEqual(
@@ -529,6 +496,306 @@ class NullityCountingTests: XCTestCase {
         )
       }
     }
+  }
+  
+}
+
+fileprivate extension NullityCountingTests {
+  
+  typealias Arity2Probe<T> = (a: T, b: T)
+  typealias Arity3Probe<T> = (a: T, b: T, c: T)
+  typealias Arity4Probe<T> = (a: T, b: T, c: T, d: T)
+  typealias Arity5Probe<T> = (a: T, b: T, c: T, d: T, e: T)
+  typealias Arity6Probe<T> = (a: T, b: T, c: T, d: T, e: T, f: T)
+  typealias Arity7Probe<T> = (a: T, b: T, c: T, d: T, e: T, f: T, g: T)
+  typealias Arity8Probe<T> = (a: T, b: T, c: T, d: T, e: T, f: T, g: T, h: T)
+  typealias Arity9Probe<T> = (a: T, b: T, c: T, d: T, e: T, f: T, g: T, h: T, i: T)
+
+  func enumerateArity2Probes(_ accessor: (Arity2Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        accessor((
+          a: a,
+          b: b
+        ))
+      }
+    }
+  }
+
+  func enumerateArity3Probes(_ accessor: (Arity3Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          accessor((
+            a: a,
+            b: b,
+            c: c
+          ))
+        }
+      }
+    }
+  }
+
+  func enumerateArity4Probes(_ accessor: (Arity4Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          for d in self.dd {
+            accessor((
+              a: a,
+              b: b,
+              c: c,
+              d: d
+            ))
+          }
+        }
+      }
+    }
+  }
+
+  func enumerateArity5Probes(_ accessor: (Arity5Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          for d in self.dd {
+            for e in self.ee {
+              accessor((
+                a: a,
+                b: b,
+                c: c,
+                d: d,
+                e: e
+              ))
+            }
+          }
+        }
+      }
+    }
+  }
+
+  func enumerateArity6Probes(_ accessor: (Arity6Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          for d in self.dd {
+            for e in self.ee {
+              for f in self.ff {
+                accessor((
+                  a: a,
+                  b: b,
+                  c: c,
+                  d: d,
+                  e: e,
+                  f: f
+                ))
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  func enumerateArity7Probes(_ accessor: (Arity7Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          for d in self.dd {
+            for e in self.ee {
+              for f in self.ff {
+                for g in self.gg {
+                  accessor((
+                    a: a,
+                    b: b,
+                    c: c,
+                    d: d,
+                    e: e,
+                    f: f,
+                    g: g
+                  ))
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  func enumerateArity8Probes(_ accessor: (Arity8Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          for d in self.dd {
+            for e in self.ee {
+              for f in self.ff {
+                for g in self.gg {
+                  for h in self.hh {
+                    accessor((
+                      a: a,
+                      b: b,
+                      c: c,
+                      d: d,
+                      e: e,
+                      f: f,
+                      g: g,
+                      h: h
+                    ))
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  func enumerateArity9Probes(_ accessor: (Arity9Probe<Int?>) -> Void) {
+    for a in self.aa {
+      for b in self.bb {
+        for c in self.cc {
+          for d in self.dd {
+            for e in self.ee {
+              for f in self.ff {
+                for g in self.gg {
+                  for h in self.hh {
+                    for i in self.ii {
+                      accessor((
+                        a: a,
+                        b: b,
+                        c: c,
+                        d: d,
+                        e: e,
+                        f: f,
+                        g: g,
+                        h: h,
+                        i: i
+                      ))
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+fileprivate extension Array {
+  
+  // clunky and lame but it'll work until i figure out the status of the algebraic
+  // collection types:
+  
+  init(_ p: NullityCountingTests.Arity2Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity3Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity4Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c,
+        p.d
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity5Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c,
+        p.d,
+        p.e
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity6Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c,
+        p.d,
+        p.e,
+        p.f
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity7Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c,
+        p.d,
+        p.e,
+        p.f,
+        p.g
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity8Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c,
+        p.d,
+        p.e,
+        p.f,
+        p.g,
+        p.h
+      ]
+    )
+  }
+
+  init(_ p: NullityCountingTests.Arity9Probe<Element>) {
+    self.init()
+    self.append(
+      contentsOf: [
+        p.a,
+        p.b,
+        p.c,
+        p.d,
+        p.e,
+        p.f,
+        p.g,
+        p.h,
+        p.i
+      ]
+    )
   }
   
 }

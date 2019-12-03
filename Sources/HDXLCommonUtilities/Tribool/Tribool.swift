@@ -545,13 +545,6 @@ extension Tribool.Definiteness : Equatable {
     return lhs.rawValue == rhs.rawValue
   }
 
-  @inlinable
-  public static func !=(
-    lhs: Tribool.Definiteness,
-    rhs: Tribool.Definiteness) -> Bool {
-    return lhs.rawValue != rhs.rawValue
-  }
-
 }
 
 
