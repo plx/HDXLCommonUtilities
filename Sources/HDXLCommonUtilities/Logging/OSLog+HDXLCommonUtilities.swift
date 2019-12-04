@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import OSLog
+import os.log
 
 public extension OSLog {
   
