@@ -1,27 +1,25 @@
 //
-//  ObjectDictionary.swift
+//  ObjectToValueDictionary.swift
 //
 
 import Foundation
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - Definition
+// MARK: ObjectToValueDictionary - Definition
 // -------------------------------------------------------------------------- //
 
-/// Wrapper for an "object-to-object dictionary", wherein object identity is object equality.
+/// Wrapper for an "object-to-value dictionary", wherein object identity is object equality.
 ///
-/// Implemented as a wrapper around a `[ObjectWrapper<Key>:ObjectWrapper<Value>]`,
-/// with the wrapper transparently wrapping/unwrapping the `Key`s and `Value`s.
-public struct ObjectDictionary<Key:AnyObject,Value:AnyObject> {
+/// Implemented as a wrapper around a `[ObjectWrapper<Key>:Value]`, but with
+/// transparent wrapping/unwrapping of the `Key` (thereby hiding `ObjectWrapper` use).
+@frozen
+public struct ObjectToValueDictionary<Key:AnyObject,Value> {
   
   @usableFromInline
   internal typealias StorageKey = ObjectWrapper<Key>
-
-  @usableFromInline
-  internal typealias StorageValue = ObjectWrapper<Value>
   
   @usableFromInline
-  internal typealias Storage = [StorageKey:StorageValue]
+  internal typealias Storage = [StorageKey:Value]
   
   @usableFromInline
   internal var storage: Storage
@@ -34,32 +32,25 @@ public struct ObjectDictionary<Key:AnyObject,Value:AnyObject> {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - Equatable
+// MARK: ObjectToValueDictionary - Equatable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : Equatable {
+extension ObjectToValueDictionary : Equatable where Value:Equatable {
   
   @inlinable
   public static func ==(
-    lhs: ObjectDictionary<Key,Value>,
-    rhs: ObjectDictionary<Key,Value>) -> Bool {
+    lhs: ObjectToValueDictionary<Key,Value>,
+    rhs: ObjectToValueDictionary<Key,Value>) -> Bool {
     return lhs.storage == rhs.storage
-  }
-
-  @inlinable
-  public static func !=(
-    lhs: ObjectDictionary<Key,Value>,
-    rhs: ObjectDictionary<Key,Value>) -> Bool {
-    return lhs.storage != rhs.storage
   }
 
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - Hashable
+// MARK: ObjectToValueDictionary - Hashable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : Hashable {
+extension ObjectToValueDictionary : Hashable where Value:Hashable {
   
   @inlinable
   public func hash(into hasher: inout Hasher) {
@@ -69,40 +60,40 @@ extension ObjectDictionary : Hashable {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - CustomStringConvertible
+// MARK: ObjectToValueDictionary - CustomStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : CustomStringConvertible {
+extension ObjectToValueDictionary : CustomStringConvertible {
   
   @inlinable
   public var description: String {
     get {
-      return "ObjectDictionary: \(String(describing: self.storage))"
+      return "ObjectToValueDictionary: \(String(describing: self.storage))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - CustomDebugStringConvertible
+// MARK: ObjectToValueDictionary - CustomDebugStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : CustomDebugStringConvertible {
+extension ObjectToValueDictionary : CustomDebugStringConvertible {
   
   @inlinable
   public var debugDescription: String {
     get {
-      return "ObjectDictionary<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(reflecting: self.storage)))"
+      return "ObjectToValueDictionary<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(reflecting: self.storage)))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - CustomReflectable
+// MARK: ObjectToValueDictionary - CustomReflectable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : CustomReflectable {
+extension ObjectToValueDictionary : CustomReflectable {
   
   @inlinable
   public var customMirror: Mirror {
@@ -118,20 +109,20 @@ extension ObjectDictionary : CustomReflectable {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - Codable
+// MARK: ObjectToValueDictionary - Codable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : Codable where Key:Codable, Value:Codable {
+extension ObjectToValueDictionary : Codable where Key:Codable, Value:Codable {
   
   // synthesized ok
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - Dictionary Emulation
+// MARK: ObjectToValueDictionary - Dictionary Emulation
 // -------------------------------------------------------------------------- //
 
-public extension ObjectDictionary {
+public extension ObjectToValueDictionary {
   
   @inlinable
   init() {
@@ -157,11 +148,11 @@ public extension ObjectDictionary {
       self.init(
         storage: Storage(
           uniqueKeysWithValues: uniqueKeysWithValues.directlyMappedOnDemand() {
-            (keyObject: Key, valueObject: Value) -> (ObjectWrapper<Key>, ObjectWrapper<Value>)
+            (keyObject: Key, value: Value) -> (ObjectWrapper<Key>, Value)
             in
             return (
               ObjectWrapper<Key>(wrappedObject: keyObject),
-              ObjectWrapper<Value>(wrappedObject: valueObject)
+              value
             )
           }
         )
@@ -178,23 +169,14 @@ public extension ObjectDictionary {
       try self.init(
         storage: Storage(
           keysAndValues.directlyMappedOnDemand() {
-            (keyObject: Key, valueObject: Value) -> (ObjectWrapper<Key>, ObjectWrapper<Value>)
+            (keyObject: Key, value: Value) -> (ObjectWrapper<Key>, Value)
             in
             return (
               ObjectWrapper<Key>(wrappedObject: keyObject),
-              ObjectWrapper<Value>(wrappedObject: valueObject)
+              value
             )
           },
-          uniquingKeysWith: {
-            (lWrapper: ObjectWrapper<Value>, rWrapper: ObjectWrapper<Value>) -> ObjectWrapper<Value>
-            in
-            return ObjectWrapper<Value>(
-              wrappedObject: try combine(
-                lWrapper.wrappedObject,
-                rWrapper.wrappedObject
-              )
-            )
-          }
+          uniquingKeysWith: combine
         )
       )
   }
@@ -209,10 +191,10 @@ public extension ObjectDictionary {
   @inlinable
   subscript(key: Key) -> Value? {
     get {
-      return self.storage[ObjectWrapper<Key>(wrappedObject: key)]?.wrappedObject
+      return self.storage[ObjectWrapper<Key>(wrappedObject: key)]
     }
     set {
-      self.storage[ObjectWrapper<Key>(wrappedObject: key)] = ObjectWrapper<Value>(wrappedObject: newValue)
+      self.storage[ObjectWrapper<Key>(wrappedObject: key)] = newValue
     }
   }
   
@@ -221,14 +203,14 @@ public extension ObjectDictionary {
     get {
       return self.storage[
         ObjectWrapper<Key>(wrappedObject: key),
-        default: ObjectWrapper<Value>(wrappedObject: defaultValue())
-      ].wrappedObject
+        default: defaultValue()
+      ]
     }
     set {
       self.storage[
         ObjectWrapper<Key>(wrappedObject: key),
-        default: ObjectWrapper<Value>(wrappedObject: defaultValue())
-      ] = ObjectWrapper<Value>(wrappedObject: newValue)
+        default: defaultValue()
+      ] = newValue
     }
   }
   
@@ -251,7 +233,7 @@ public extension ObjectDictionary {
       }
       return (
         result.key.wrappedObject,
-        result.value.wrappedObject
+        result.value
       )
     }
   }
@@ -263,7 +245,7 @@ public extension ObjectDictionary {
     }
     return (
       result.key.wrappedObject,
-      result.value.wrappedObject
+      result.value
     )
   }
 
@@ -275,7 +257,7 @@ public extension ObjectDictionary {
       }
       return (
         result.key.wrappedObject,
-        result.value.wrappedObject
+        result.value
       )
   }
   
@@ -285,27 +267,18 @@ public extension ObjectDictionary {
     _ value: Value,
     forKey key: Key) -> Value? {
     return self.storage.updateValue(
-      ObjectWrapper<Value>(wrappedObject: value),
+      value,
       forKey: ObjectWrapper<Key>(wrappedObject: key)
-    )?.wrappedObject
+    )
   }
   
   @inlinable
   mutating func merge(
-    _ other: ObjectDictionary<Key,Value>,
+    _ other: ObjectToValueDictionary<Key,Value>,
     uniquingKeysWith combine: (Value, Value) throws -> Value) rethrows {
     try self.storage.merge(
       other.storage,
-      uniquingKeysWith: {
-        (lWrapper: ObjectWrapper<Value>, rWrapper: ObjectWrapper<Value>) -> ObjectWrapper<Value>
-        in
-        return ObjectWrapper<Value>(
-          wrappedObject: try combine(
-            lWrapper.wrappedObject,
-            rWrapper.wrappedObject
-          )
-        )
-      }
+      uniquingKeysWith: combine
     )
   }
   
@@ -316,43 +289,25 @@ public extension ObjectDictionary {
     where S : Sequence, S.Element == (Key, Value) {
       try self.storage.merge(
         other.directlyMappedOnDemand() {
-          (key: Key, value: Value) -> (ObjectWrapper<Key>,ObjectWrapper<Value>)
+          (key: Key, value: Value) -> (ObjectWrapper<Key>,Value)
           in
           return (
             ObjectWrapper<Key>(wrappedObject: key),
-            ObjectWrapper<Value>(wrappedObject: value)
+            value
           )
         },
-        uniquingKeysWith: {
-          (lWrapper: ObjectWrapper<Value>, rWrapper: ObjectWrapper<Value>) -> ObjectWrapper<Value>
-          in
-          return ObjectWrapper<Value>(
-            wrappedObject: try combine(
-              lWrapper.wrappedObject,
-              rWrapper.wrappedObject
-            )
-          )
-        }
+        uniquingKeysWith: combine
       )
   }
   
   @inlinable
   func merging(
-    _ other: ObjectDictionary<Key,Value>,
-    uniquingKeysWith combine: (Value, Value) throws -> Value) rethrows -> ObjectDictionary<Key,Value> {
-    return try ObjectDictionary<Key,Value>(
+    _ other: ObjectToValueDictionary<Key,Value>,
+    uniquingKeysWith combine: (Value, Value) throws -> Value) rethrows -> ObjectToValueDictionary<Key,Value> {
+    return try ObjectToValueDictionary<Key,Value>(
       storage: self.storage.merging(
         other.storage,
-        uniquingKeysWith: {
-          (lWrapper: ObjectWrapper<Value>, rWrapper: ObjectWrapper<Value>) -> ObjectWrapper<Value>
-          in
-          return ObjectWrapper<Value>(
-            wrappedObject: try combine(
-              lWrapper.wrappedObject,
-              rWrapper.wrappedObject
-            )
-          )
-        }
+        uniquingKeysWith: combine
       )
     )
   }
@@ -360,28 +315,19 @@ public extension ObjectDictionary {
   @inlinable
   func merging<S>(
     _ other: S,
-    uniquingKeysWith combine: (Value, Value) throws -> Value) rethrows -> ObjectDictionary<Key,Value>
+    uniquingKeysWith combine: (Value, Value) throws -> Value) rethrows -> ObjectToValueDictionary<Key,Value>
     where S : Sequence, S.Element == (Key, Value) {
-      return try ObjectDictionary<Key,Value>(
+      return try ObjectToValueDictionary<Key,Value>(
         storage: self.storage.merging(
           other.directlyMappedOnDemand() {
-            (key: Key, value: Value) -> (ObjectWrapper<Key>,ObjectWrapper<Value>)
+            (key: Key, value: Value) -> (ObjectWrapper<Key>,Value)
             in
             return (
               ObjectWrapper<Key>(wrappedObject: key),
-              ObjectWrapper<Value>(wrappedObject: value)
+              value
             )
           },
-          uniquingKeysWith: {
-            (lWrapper: ObjectWrapper<Value>, rWrapper: ObjectWrapper<Value>) -> ObjectWrapper<Value>
-            in
-            return ObjectWrapper<Value>(
-              wrappedObject: try combine(
-                lWrapper.wrappedObject,
-                rWrapper.wrappedObject
-              )
-            )
-          }
+          uniquingKeysWith: combine
         )
       )
   }
@@ -393,14 +339,14 @@ public extension ObjectDictionary {
 
   @inlinable
   func filter(
-    _ isIncluded: (Key, Value) throws -> Bool) rethrows -> ObjectDictionary<Key,Value> {
-    return try ObjectDictionary<Key,Value>(
+    _ isIncluded: (Key, Value) throws -> Bool) rethrows -> ObjectToValueDictionary<Key,Value> {
+    return try ObjectToValueDictionary<Key,Value>(
       storage: self.storage.filter() {
-        (keyWrapper: ObjectWrapper<Key>, valueWrapper: ObjectWrapper<Value>) -> Bool
+        (keyWrapper: ObjectWrapper<Key>, value: Value) -> Bool
         in
         return try isIncluded(
           keyWrapper.wrappedObject,
-          valueWrapper.wrappedObject
+          value
         )
       }
     )
@@ -414,7 +360,7 @@ public extension ObjectDictionary {
     )
     return (
       result.key.wrappedObject,
-      result.value.wrappedObject
+      result.value
     )
   }
   
@@ -424,7 +370,7 @@ public extension ObjectDictionary {
       forKey: ObjectWrapper<Key>(
         wrappedObject: key
       )
-    )?.wrappedObject
+    )
   }
 
   
@@ -436,8 +382,8 @@ public extension ObjectDictionary {
     )
   }
 
-  typealias Keys = ObjectDictionaryKeys<Key,Value>
-  typealias Values = ObjectDictionaryValues<Key,Value>
+  typealias Keys = ObjectToValueDictionaryKeys<Key,Value>
+  typealias Values = ObjectToValueDictionaryValues<Key,Value>
   
   @inlinable
   var keys: Keys {
@@ -463,12 +409,12 @@ public extension ObjectDictionary {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - Collection
+// MARK: ObjectToValueDictionary - Collection
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : Collection {
+extension ObjectToValueDictionary : Collection {
   
-  public typealias Index = ObjectDictionaryIndex<Key,Value>
+  public typealias Index = ObjectToValueDictionaryIndex<Key,Value>
   public typealias Element = (key: Key, value: Value)
   
   @inlinable
@@ -505,7 +451,7 @@ extension ObjectDictionary : Collection {
       let result = self.storage[index.storage]
       return (
         result.key.wrappedObject,
-        result.value.wrappedObject
+        result.value
       )
     }
   }
@@ -585,10 +531,10 @@ extension ObjectDictionary : Collection {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionary - ExpressibleByDictionaryLiteral
+// MARK: ObjectToValueDictionary - ExpressibleByDictionaryLiteral
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionary : ExpressibleByDictionaryLiteral {
+extension ObjectToValueDictionary : ExpressibleByDictionaryLiteral {
   
   public typealias DictionaryLiteralElement = (Key,Value)
   
@@ -597,11 +543,11 @@ extension ObjectDictionary : ExpressibleByDictionaryLiteral {
     self.init(
       storage: Storage(
         uniqueKeysWithValues: elements.directlyMappedOnDemand() {
-          (key: Key, value: Value) -> (ObjectWrapper<Key>, ObjectWrapper<Value>)
+          (key: Key, value: Value) -> (ObjectWrapper<Key>, Value)
           in
           return (
             ObjectWrapper<Key>(wrappedObject: key),
-            ObjectWrapper<Value>(wrappedObject: value)
+            value
           )
         }
       )
@@ -611,13 +557,14 @@ extension ObjectDictionary : ExpressibleByDictionaryLiteral {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryIndex - Definition
+// MARK: ObjectToValueDictionaryIndex - Definition
 // -------------------------------------------------------------------------- //
 
-public struct ObjectDictionaryIndex<Key:AnyObject,Value:AnyObject> {
+@frozen
+public struct ObjectToValueDictionaryIndex<Key:AnyObject,Value> {
   
   @usableFromInline
-  internal typealias Storage = ObjectDictionary<Key,Value>.Storage.Index
+  internal typealias Storage = ObjectToValueDictionary<Key,Value>.Storage.Index
   
   @usableFromInline
   internal var storage: Storage
@@ -640,68 +587,61 @@ public struct ObjectDictionaryIndex<Key:AnyObject,Value:AnyObject> {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryIndex - Equatable
+// MARK: ObjectToValueDictionaryIndex - Equatable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryIndex : Equatable {
+extension ObjectToValueDictionaryIndex : Equatable {
   
   @inlinable
   public static func ==(
-    lhs: ObjectDictionaryIndex<Key,Value>,
-    rhs: ObjectDictionaryIndex<Key,Value>) -> Bool {
+    lhs: ObjectToValueDictionaryIndex<Key,Value>,
+    rhs: ObjectToValueDictionaryIndex<Key,Value>) -> Bool {
     return lhs.storage == rhs.storage
-  }
-
-  @inlinable
-  public static func !=(
-    lhs: ObjectDictionaryIndex<Key,Value>,
-    rhs: ObjectDictionaryIndex<Key,Value>) -> Bool {
-    return lhs.storage != rhs.storage
   }
 
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryIndex - Comparable
+// MARK: ObjectToValueDictionaryIndex - Comparable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryIndex : Comparable {
+extension ObjectToValueDictionaryIndex : Comparable {
   
   @inlinable
   public static func <(
-    lhs: ObjectDictionaryIndex<Key,Value>,
-    rhs: ObjectDictionaryIndex<Key,Value>) -> Bool {
+    lhs: ObjectToValueDictionaryIndex<Key,Value>,
+    rhs: ObjectToValueDictionaryIndex<Key,Value>) -> Bool {
     return lhs.storage < rhs.storage
   }
 
   @inlinable
   public static func >(
-    lhs: ObjectDictionaryIndex<Key,Value>,
-    rhs: ObjectDictionaryIndex<Key,Value>) -> Bool {
+    lhs: ObjectToValueDictionaryIndex<Key,Value>,
+    rhs: ObjectToValueDictionaryIndex<Key,Value>) -> Bool {
     return lhs.storage > rhs.storage
   }
   
   @inlinable
   public static func <=(
-    lhs: ObjectDictionaryIndex<Key,Value>,
-    rhs: ObjectDictionaryIndex<Key,Value>) -> Bool {
+    lhs: ObjectToValueDictionaryIndex<Key,Value>,
+    rhs: ObjectToValueDictionaryIndex<Key,Value>) -> Bool {
     return lhs.storage <= rhs.storage
   }
 
   @inlinable
   public static func >=(
-    lhs: ObjectDictionaryIndex<Key,Value>,
-    rhs: ObjectDictionaryIndex<Key,Value>) -> Bool {
+    lhs: ObjectToValueDictionaryIndex<Key,Value>,
+    rhs: ObjectToValueDictionaryIndex<Key,Value>) -> Bool {
     return lhs.storage >= rhs.storage
   }
 
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryIndex - Hashable
+// MARK: ObjectToValueDictionaryIndex - Hashable
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryIndex : Hashable {
+extension ObjectToValueDictionaryIndex : Hashable {
   
   @inlinable
   public func hash(into hasher: inout Hasher) {
@@ -711,44 +651,45 @@ extension ObjectDictionaryIndex : Hashable {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryIndex - CustomStringConvertible
+// MARK: ObjectToValueDictionaryIndex - CustomStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryIndex : CustomStringConvertible {
+extension ObjectToValueDictionaryIndex : CustomStringConvertible {
   
   @inlinable
   public var description: String {
     get {
-      return "ObjectDictionaryIndex: \(String(describing: self.storage))"
+      return "ObjectToValueDictionaryIndex: \(String(describing: self.storage))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryIndex - CustomDebugStringConvertible
+// MARK: ObjectToValueDictionaryIndex - CustomDebugStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryIndex : CustomDebugStringConvertible {
+extension ObjectToValueDictionaryIndex : CustomDebugStringConvertible {
   
   @inlinable
   public var debugDescription: String {
     get {
-      return "ObjectDictionaryIndex<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(describing: self.storage)))"
+      return "ObjectToValueDictionaryIndex<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(describing: self.storage)))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryKeys - Definition
+// MARK: ObjectToValueDictionaryKeys - Definition
 // -------------------------------------------------------------------------- //
 
-/// *Immutable* view into the *keys* of an `ObjectDictionary`.
-public struct ObjectDictionaryKeys<Key:AnyObject,Value:AnyObject> {
+/// *Immutable* view into the *keys* of an `ObjectToValueDictionary`.
+@frozen
+public struct ObjectToValueDictionaryKeys<Key:AnyObject,Value> {
   
   @usableFromInline
-  internal typealias Storage = ObjectDictionary<Key,Value>.Storage.Keys
+  internal typealias Storage = ObjectToValueDictionary<Key,Value>.Storage.Keys
   
   @usableFromInline
   internal var storage: Storage
@@ -761,42 +702,42 @@ public struct ObjectDictionaryKeys<Key:AnyObject,Value:AnyObject> {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryKeys - CustomStringConvertible
+// MARK: ObjectToValueDictionaryKeys - CustomStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryKeys : CustomStringConvertible {
+extension ObjectToValueDictionaryKeys : CustomStringConvertible {
   
   @inlinable
   public var description: String {
     get {
-      return "ObjectDictionaryKeys: \(String(describing: self.storage))"
+      return "ObjectToValueDictionaryKeys: \(String(describing: self.storage))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryKeys - CustomDebugStringConvertible
+// MARK: ObjectToValueDictionaryKeys - CustomDebugStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryKeys : CustomDebugStringConvertible {
+extension ObjectToValueDictionaryKeys : CustomDebugStringConvertible {
   
   @inlinable
   public var debugDescription: String {
     get {
-      return "ObjectDictionaryKeys<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(reflecting: self.storage)))"
+      return "ObjectToValueDictionaryKeys<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(reflecting: self.storage)))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryKeys - Collection
+// MARK: ObjectToValueDictionaryKeys - Collection
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryKeys : Collection {
+extension ObjectToValueDictionaryKeys : Collection {
   
-  public typealias Index = ObjectDictionaryIndex<Key,Value>
+  public typealias Index = ObjectToValueDictionaryIndex<Key,Value>
   public typealias Element = Key
   
   @inlinable
@@ -909,14 +850,15 @@ extension ObjectDictionaryKeys : Collection {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryValues - Definition
+// MARK: ObjectToValueDictionaryValues - Definition
 // -------------------------------------------------------------------------- //
 
-/// *Mutable* view into the *values* of an `ObjectDictionary`.
-public struct ObjectDictionaryValues<Key:AnyObject,Value:AnyObject> {
+/// *Mutable* view into the *values* of an `ObjectToValueDictionary`.
+@frozen
+public struct ObjectToValueDictionaryValues<Key:AnyObject,Value> {
   
   @usableFromInline
-  internal typealias Storage = ObjectDictionary<Key,Value>.Storage.Values
+  internal typealias Storage = ObjectToValueDictionary<Key,Value>.Storage.Values
   
   @usableFromInline
   internal var storage: Storage
@@ -929,42 +871,42 @@ public struct ObjectDictionaryValues<Key:AnyObject,Value:AnyObject> {
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryValues - CustomStringConvertible
+// MARK: ObjectToValueDictionaryValues - CustomStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryValues : CustomStringConvertible {
+extension ObjectToValueDictionaryValues : CustomStringConvertible {
   
   @inlinable
   public var description: String {
     get {
-      return "ObjectDictionaryValues: \(String(describing: self.storage))"
+      return "ObjectToValueDictionaryValues: \(String(describing: self.storage))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryValues - CustomDebugStringConvertible
+// MARK: ObjectToValueDictionaryValues - CustomDebugStringConvertible
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryValues : CustomDebugStringConvertible {
+extension ObjectToValueDictionaryValues : CustomDebugStringConvertible {
   
   @inlinable
   public var debugDescription: String {
     get {
-      return "ObjectDictionaryValues<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(reflecting: self.storage)))"
+      return "ObjectToValueDictionaryValues<\(String(reflecting: Key.self)),\(String(reflecting: Value.self))>(storage: \(String(reflecting: self.storage)))"
     }
   }
   
 }
 
 // -------------------------------------------------------------------------- //
-// MARK: ObjectDictionaryValues - MutableCollection
+// MARK: ObjectToValueDictionaryValues - MutableCollection
 // -------------------------------------------------------------------------- //
 
-extension ObjectDictionaryValues : MutableCollection {
+extension ObjectToValueDictionaryValues : MutableCollection {
   
-  public typealias Index = ObjectDictionaryIndex<Key,Value>
+  public typealias Index = ObjectToValueDictionaryIndex<Key,Value>
   public typealias Element = Value
   
   @inlinable
@@ -998,12 +940,10 @@ extension ObjectDictionaryValues : MutableCollection {
   @inlinable
   public subscript(index: Index) -> Element {
     get {
-      return self.storage[index.storage].wrappedObject
+      return self.storage[index.storage]
     }
     set {
-      self.storage[index.storage] = ObjectWrapper<Element>(
-        wrappedObject: newValue
-      )
+      self.storage[index.storage] = newValue
     }
   }
   

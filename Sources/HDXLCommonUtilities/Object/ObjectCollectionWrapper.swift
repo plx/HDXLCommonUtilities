@@ -15,7 +15,7 @@ import Foundation
 ///
 /// When possible it's *probably* preferable to use `ObjectSet` instead (it has a slightly richer API and is
 /// likely to be slightly-more-efficient on a few things). Note, further, that you currently *must* use the various
-/// `ObjectDictionary` types when you want dictionary semantics, b/c at present it's the missing piece:
+/// `ObjectDictionary` and `ObjectObjectDictionary` types when you want dictionary semantics, b/c at present it's the missing piece:
 ///
 /// - `Set` and `SetAlgebra` exist
 /// - `Array` and `RangeReplaceableCollection` exist
@@ -661,6 +661,7 @@ extension ObjectCollectionWrapper where WrappedCollection:RangeReplaceableCollec
 // MARK: ObjectCollectionWrapperIndex - Definition
 // -------------------------------------------------------------------------- //
 
+@frozen
 public struct ObjectCollectionWrapperIndex<Element,WrappedCollection>
   where
   Element:AnyObject,

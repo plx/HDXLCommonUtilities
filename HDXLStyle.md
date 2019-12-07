@@ -3,13 +3,37 @@
 The `HDXL` packages exhibit some personal style preferences:
 
 1. 2-space indentation
-2. explicit `self` (and other "explicit"s)
-3. `guard`-stacking
-4. `// ////` and `pedantic_assert` 
+2. `with(property:)`-style derived-value utilities
+3. explicit `self` (and other "explicit"s)
+4. `guard`-stacking
+5. `// ////` and `pedantic_assert` 
 
 ## Spacing & Indentation
 
 All source files should use 2-space indentation.
+
+## `with(property:)` Derivation
+
+Within the HDXL project you will frequently see datatypes that have `with(property:)`-style APIs, like so:
+
+```swift
+struct Point2D<T:Real> {
+  var x: T
+  var y: T
+  
+  func with(x: T) -> Point2D<T> {
+    return Point2D<T>(x: x, y: self.y)
+  }
+
+  func with(y: T) -> Point2D<T> {
+    return Point2D<T>(x: self.x, y: y)
+  }
+}
+```
+
+I include this, in part, simply because I prefer `let bar = foo.with(x: newX)` to, say, `var bar = foo; bar.x = newX`. Aesthetics aside, this idiom particularly shines when implementing the COW pattern: communicating "I intend to obtain a new value, but with this change applied" can allow for smarter logic in your new-backing-storage construction. 
+
+I will address this topic in more detail in a forthcoming article.
 
 ## Explicit `self` (etc.)
 

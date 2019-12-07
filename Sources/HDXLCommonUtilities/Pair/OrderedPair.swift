@@ -9,6 +9,7 @@ import Foundation
 // -------------------------------------------------------------------------- //
 
 /// A type for a "2-tuple certified to be ordered non-descendingly".
+@frozen
 public struct OrderedPair<T:Comparable> {
 
   /// The lesser of the two values.

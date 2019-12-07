@@ -9,6 +9,7 @@ import Foundation
 // -------------------------------------------------------------------------- //
 
 /// This is a 2-tuple, but as a nominal type; acting as a nominal type allows it to conform to protocols.
+@frozen
 public struct Pair<A,B> {
 
   /// The first slot.

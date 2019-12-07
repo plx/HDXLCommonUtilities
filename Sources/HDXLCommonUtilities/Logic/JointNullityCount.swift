@@ -9,6 +9,10 @@ import Foundation
 // -------------------------------------------------------------------------- //
 
 /// Special-purpose "pair" for doing simultaneous count-of-`nil`/non-`nil`.
+///
+/// Thought about just using a tuple like `(countOfNil: Int, countOfNonNil: Int)`,
+/// but wanted `Validatable`, actual constructors, and so on and so forth.
+@frozen
 public struct JointNullityCount {
   
   public var countOfNil: Int

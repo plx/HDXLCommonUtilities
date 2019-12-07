@@ -440,13 +440,6 @@ extension Tribool : Equatable {
     return lhs.rawValue == rhs.rawValue
   }
 
-  @inlinable
-  public static func !=(
-    lhs: Tribool,
-    rhs: Tribool) -> Bool {
-    return lhs.rawValue != rhs.rawValue
-  }
-
 }
 
 // -------------------------------------------------------------------------- //

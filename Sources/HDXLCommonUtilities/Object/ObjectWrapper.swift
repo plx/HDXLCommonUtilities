@@ -9,8 +9,10 @@ import Foundation
 // -------------------------------------------------------------------------- //
 
 /// Struct giving objects `Equatable`, `Comparable`, and `Hashable` conformances based solely
-/// on the `ObjectIdentifier`. Exists to support `ObjectSet` and `ObjectDictionary`, but
-/// kept public in case it finds other uses.
+/// on the `ObjectIdentifier`. Exists to support `ObjectSet`, `ObjectCollectionWrapper`, and
+/// the "`Object`-dictionary" family of types, but made `public` because it's a
+/// broadly-useful tool (at least in my experience).
+@frozen
 public struct ObjectWrapper<WrappedObject:AnyObject> {
   
   /// The wrapped object.
@@ -91,57 +93,57 @@ extension ObjectWrapper : Equatable {
 
 }
 
-// -------------------------------------------------------------------------- //
-// MARK: ObjectWrapper - Comparable
-// -------------------------------------------------------------------------- //
-
-extension ObjectWrapper : Comparable {
-  
-  @inlinable
-  public static func <(
-    lhs: ObjectWrapper<WrappedObject>,
-    rhs: ObjectWrapper<WrappedObject>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.objectIdentifier < rhs.objectIdentifier
-  }
-
-  @inlinable
-  public static func >(
-    lhs: ObjectWrapper<WrappedObject>,
-    rhs: ObjectWrapper<WrappedObject>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.objectIdentifier > rhs.objectIdentifier
-  }
-
-  @inlinable
-  public static func <=(
-    lhs: ObjectWrapper<WrappedObject>,
-    rhs: ObjectWrapper<WrappedObject>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.objectIdentifier <= rhs.objectIdentifier
-  }
-  
-  @inlinable
-  public static func >=(
-    lhs: ObjectWrapper<WrappedObject>,
-    rhs: ObjectWrapper<WrappedObject>) -> Bool {
-    // /////////////////////////////////////////////////////////////////////////
-    pedantic_assert(lhs.isValid)
-    pedantic_assert(rhs.isValid)
-    // /////////////////////////////////////////////////////////////////////////
-    return lhs.objectIdentifier >= rhs.objectIdentifier
-  }
-  
-}
+//// -------------------------------------------------------------------------- //
+//// MARK: ObjectWrapper - Comparable
+//// -------------------------------------------------------------------------- //
+//
+//extension ObjectWrapper : Comparable {
+//  
+//  @inlinable
+//  public static func <(
+//    lhs: ObjectWrapper<WrappedObject>,
+//    rhs: ObjectWrapper<WrappedObject>) -> Bool {
+//    // /////////////////////////////////////////////////////////////////////////
+//    pedantic_assert(lhs.isValid)
+//    pedantic_assert(rhs.isValid)
+//    // /////////////////////////////////////////////////////////////////////////
+//    return lhs.objectIdentifier < rhs.objectIdentifier
+//  }
+//
+//  @inlinable
+//  public static func >(
+//    lhs: ObjectWrapper<WrappedObject>,
+//    rhs: ObjectWrapper<WrappedObject>) -> Bool {
+//    // /////////////////////////////////////////////////////////////////////////
+//    pedantic_assert(lhs.isValid)
+//    pedantic_assert(rhs.isValid)
+//    // /////////////////////////////////////////////////////////////////////////
+//    return lhs.objectIdentifier > rhs.objectIdentifier
+//  }
+//
+//  @inlinable
+//  public static func <=(
+//    lhs: ObjectWrapper<WrappedObject>,
+//    rhs: ObjectWrapper<WrappedObject>) -> Bool {
+//    // /////////////////////////////////////////////////////////////////////////
+//    pedantic_assert(lhs.isValid)
+//    pedantic_assert(rhs.isValid)
+//    // /////////////////////////////////////////////////////////////////////////
+//    return lhs.objectIdentifier <= rhs.objectIdentifier
+//  }
+//  
+//  @inlinable
+//  public static func >=(
+//    lhs: ObjectWrapper<WrappedObject>,
+//    rhs: ObjectWrapper<WrappedObject>) -> Bool {
+//    // /////////////////////////////////////////////////////////////////////////
+//    pedantic_assert(lhs.isValid)
+//    pedantic_assert(rhs.isValid)
+//    // /////////////////////////////////////////////////////////////////////////
+//    return lhs.objectIdentifier >= rhs.objectIdentifier
+//  }
+//  
+//}
 
 // -------------------------------------------------------------------------- //
 // MARK: ObjectWrapper - Hashable

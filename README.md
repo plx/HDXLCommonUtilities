@@ -4,17 +4,15 @@ This package contains miscellaneous utilities, infrastructure and support code. 
 
 I'm still in the process of slimming this package down, and thus between now and `0.1.0` expect even more of non-essential code to be moved out into its own packages.
 
-## Contents Overview
+## Contents & Status Overview
 
-It's hard to summarize a "common utilities" library, so I'll stick to the highlights.
-
-There's lots of `ComparisonResult`-related support: a `<=>` operator, efficient utilities for chained comparisons, and son on. There's support for a wide range of in-place, efficient mutations on `Array` and `Dictionary` (values). There's a lot of minor logic utilities. There's tools for reducing objects to their identity, and then collections for working with objects in that state. 
+I've put a longer summary of the highlights in `Highlights.md`. 
 
 ## Documentation & Testing
 
 Most methods are documented.
 
-Not everything in the package is tested, but much of it is--especially the things I intend to keep in it.
+Not *everything* in the package is tested, but *almost everything* is—especially for the things I don't anticipate extracting into their own pacakges.
 
 ## Open Concerns
 
@@ -30,6 +28,7 @@ Currently-public, "interesting" packages include:
 
 - [HDXLSIMDSupport](https://github.com/plx/HDXLSIMDSupport): types that let you *write* `Quaternion<T>`, `Matrix2x2<T>`, ..., `Matrix4x4<T>` but *use* the actual, native, SIMD-accelerated types.
 - [HDXLSemanticEquivalance](https://github.com/plx/HDXLSemanticEquivalence): a thin package containing tools to assist with deduplication logic; grew out of `CloudKit/CoreData` sync, but generalized to be no longer `CoreData`-specific.
+- [HDXLAlgebraicUtilities](https://github.com/plx/HDXLAlgebraicUtilities): an experimental package with algebraic sums, products, and related collections
 
 ...with more hopefully coming soon.
 

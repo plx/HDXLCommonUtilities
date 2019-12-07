@@ -12,6 +12,11 @@ import Foundation
 ///
 /// Implemented as a wrapper around a `Set<ObjectWrapper<Element>>`, with the wrapper
 /// transparently wrapping/unwrapping the `Element`.
+///
+/// Preferable to using `ObjectWrapper<Set<Element>>` when you know this is what
+/// you actually want.
+///
+@frozen
 public struct ObjectSet<Element:AnyObject> {
 
   @usableFromInline
@@ -768,6 +773,7 @@ public extension ObjectSet {
 // MARK: ObjectSetIndex - Definition
 // -------------------------------------------------------------------------- //
 
+@frozen
 public struct ObjectSetIndex<Element:AnyObject> {
   
   @usableFromInline
