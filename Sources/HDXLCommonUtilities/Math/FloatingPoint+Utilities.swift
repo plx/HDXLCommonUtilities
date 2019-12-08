@@ -23,6 +23,5 @@ public extension FloatingPoint {
       return 0
     }
   }
-
   
 }

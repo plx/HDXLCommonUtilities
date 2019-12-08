@@ -148,3 +148,171 @@ public extension FloatingPoint {
   }
   
 }
+
+// ----------------------------------------------------------------------- //
+// MARK: FloatingPoint - Unit Interval
+// ----------------------------------------------------------------------- //
+
+public extension FloatingPoint {
+  
+  @inlinable
+  var isWithinUnitInterval: Bool {
+    get {
+      return 0 <= self && self <= 1
+    }
+  }
+  
+  @inlinable
+  var isStrictlyWithinUnitInterval: Bool {
+    get {
+      return 0 < self && self < 1
+    }
+  }
+  
+  @inlinable
+  var clippedToUnitInterval: Self {
+    get {
+      guard 0 <= self else {
+        return 0
+      }
+      guard self <= 1 else {
+        return 1
+      }
+      return self
+    }
+  }
+  
+  @inlinable
+  var clampedToUnitInterval: Self {
+    get {
+      return self.clippedToUnitInterval
+    }
+  }
+  
+}
+
+// ----------------------------------------------------------------------- //
+// MARK: FloatingPoint - Symmetric Unit Interval
+// ----------------------------------------------------------------------- //
+
+public extension FloatingPoint {
+  
+  @inlinable
+  var isWithinSymmetricUnitInterval: Bool {
+    get {
+      return -1 <= self && self <= 1
+    }
+  }
+  
+  @inlinable
+  var isStrictlyWithinSymmetricUnitInterval: Bool {
+    get {
+      return -1 < self && self < 1
+    }
+  }
+  
+  @inlinable
+  var clippedToSymmetricUnitInterval: Self {
+    get {
+      guard -1 <= self else {
+        return -1
+      }
+      guard self <= 1 else {
+        return 1
+      }
+      return self
+    }
+  }
+  
+  @inlinable
+  var clampedToSymmetricUnitInterval: Self {
+    get {
+      return self.clippedToSymmetricUnitInterval
+    }
+  }
+  
+}
+
+// ----------------------------------------------------------------------- //
+// MARK: FloatingPoint - Positive Unit Interval
+// ----------------------------------------------------------------------- //
+
+public extension FloatingPoint {
+  
+  @inlinable
+  var isWithinPositiveUnitInterval: Bool {
+    get {
+      return 0 <= self && self <= 1
+    }
+  }
+  
+  @inlinable
+  var isStrictlyWithinPositiveUnitInterval: Bool {
+    get {
+      return 0 < self && self < 1
+    }
+  }
+  
+  @inlinable
+  var clippedToPositiveUnitInterval: Self {
+    get {
+      guard 0 <= self else {
+        return 0
+      }
+      guard self <= 1 else {
+        return 1
+      }
+      return self
+    }
+  }
+  
+  @inlinable
+  var clampedToPositiveUnitInterval: Self {
+    get {
+      return self.clippedToPositiveUnitInterval
+    }
+  }
+  
+}
+
+// ----------------------------------------------------------------------- //
+// MARK: FloatingPoint - Negative Unit Interval
+// ----------------------------------------------------------------------- //
+
+public extension FloatingPoint {
+  
+  @inlinable
+  var isWithinNegativeUnitInterval: Bool {
+    get {
+      return -1 <= self && self <= 0
+    }
+  }
+  
+  @inlinable
+  var isStrictlyWithinNegativeUnitInterval: Bool {
+    get {
+      return -1 < self && self < 0
+    }
+  }
+  
+  @inlinable
+  var clippedToNegativeUnitInterval: Self {
+    get {
+      guard -1 <= self else {
+        return -1
+      }
+      guard self <= 0 else {
+        return 0
+      }
+      return self
+    }
+  }
+  
+  @inlinable
+  var clampedToNegativeUnitInterval: Self {
+    get {
+      return self.clippedToNegativeUnitInterval
+    }
+  }
+  
+}

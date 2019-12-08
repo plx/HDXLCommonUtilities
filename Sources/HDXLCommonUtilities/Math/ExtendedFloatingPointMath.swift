@@ -48,6 +48,16 @@ public protocol ExtendedFloatingPointMath : Real /*, ExpressibleByFloatLiteral *
   /// - note: Temporary work-around until we have a way to write literals that works with `Real`.
   ///
   static func κ(_ literalDouble: Double) -> Self
+  
+  // ------------------------------------------------------------------------ //
+  // MARK: Common Operations
+  // ------------------------------------------------------------------------ //
+
+  /// Returns `self * 0.5`.
+  ///
+  /// *Artificial* protocol requirement, introduced *only* to--hopefully!--reduce
+  /// downstream compile-time blowups.
+  var half: Self { get }
 
   // ------------------------------------------------------------------------ //
   // MARK: Extended Math API

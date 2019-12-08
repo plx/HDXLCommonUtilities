@@ -17,8 +17,15 @@ extension Double : ExtendedFloatingPointMath {
   }
   
   @inlinable
-  public static func κ(_ literalDouble: Double) -> Self {
+  public static func κ(_ literalDouble: Double) -> Double {
     return literalDouble
+  }
+  
+  @inlinable
+  public var half: Double {
+    get {
+      return self * 0.5
+    }
   }
   
   @inlinable

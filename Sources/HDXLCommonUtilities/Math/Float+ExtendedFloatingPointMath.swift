@@ -20,6 +20,13 @@ extension Float : ExtendedFloatingPointMath {
   public static func κ(_ literalDouble: Double) -> Float {
     return Float(literalDouble)
   }
+  
+  @inlinable
+  public var half: Float {
+    get {
+      return self * 0.5
+    }
+  }
 
   @inlinable
   public static func cubeRoot(of value: Float) -> Float {
