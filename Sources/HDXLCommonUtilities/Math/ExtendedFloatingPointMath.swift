@@ -22,7 +22,36 @@ import Numerics
 ///
 /// As was previously the case, this protocol is a *temporary* implementation
 /// detail--to be phased out in favor of `Real` as soon as possible.
-public protocol ExtendedFloatingPointMath : Real, ExpressibleByFloatLiteral {
+///
+/// - note: `ExpressibleByFloatLiteral` seems to be one of the culprits behind crazy-slow compile times downstream. I'm replacing it with `Float` and `Double` initializers, with `Double` variant accessible as `Self.κ()`.
+///
+public protocol ExtendedFloatingPointMath : Real /*, ExpressibleByFloatLiteral */ {
+  
+  // ------------------------------------------------------------------------ //
+  // MARK: Literal Construction
+  // ------------------------------------------------------------------------ //
+  
+  /// Constructs `Self` from what *should be* a `Float` literal.
+  ///
+  /// - note: Temporary work-around until we have a way to write literals that works with `Real`.
+  ///
+  init(fromLiteralFloat literalFloat: Float)
+  
+  /// Constructs `Self` from what *should be* a `Double` literal.
+  ///
+  /// - note: Temporary work-around until we have a way to write literals that works with `Real`.
+  ///
+  init(fromLiteralDouble literalDouble: Double)
+  
+  /// Type-level shorthand for a "κ(onstant)"; expected to call-through to `init(fromLiteralDouble:)`.
+  ///
+  /// - note: Temporary work-around until we have a way to write literals that works with `Real`.
+  ///
+  static func κ(_ literalDouble: Double) -> Self
+
+  // ------------------------------------------------------------------------ //
+  // MARK: Extended Math API
+  // ------------------------------------------------------------------------ //
   
   static func cubeRoot(of value: Self) -> Self
   
@@ -40,7 +69,11 @@ public protocol ExtendedFloatingPointMath : Real, ExpressibleByFloatLiteral {
   static func baseTenLogarithm(of value: Self) -> Self
   
   static func piArctangent2(y: Self, x: Self) -> Self
-    
+
+  // ------------------------------------------------------------------------ //
+  // MARK: Modulus-Convenience API
+  // ------------------------------------------------------------------------ //
+
   static func signedModulus(
     of value: Self,
     by modulus: Self) -> Self

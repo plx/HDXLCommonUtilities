@@ -5,6 +5,21 @@
 import Foundation
 
 extension Double : ExtendedFloatingPointMath {
+
+  @inlinable
+  public init(fromLiteralFloat literalFloat: Float) {
+    self.init(literalFloat)
+  }
+
+  @inlinable
+  public init(fromLiteralDouble literalDouble: Double) {
+    self.init(literalDouble)
+  }
+  
+  @inlinable
+  public static func κ(_ literalDouble: Double) -> Self {
+    return literalDouble
+  }
   
   @inlinable
   public static func cubeRoot(of value: Double) -> Double {
