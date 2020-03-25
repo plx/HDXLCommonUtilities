@@ -1,6 +1,6 @@
 //
 //  WeakExtremaTests.swift
-//  
+//
 
 import Foundation
 import XCTest

@@ -5,6 +5,10 @@
 import Foundation
 import Numerics
 
+// -------------------------------------------------------------------------- //
+// MARK: ExtendedFloatingPointMath - Definition
+// -------------------------------------------------------------------------- //
+
 /// Edit circa version 0.0.30: the initial release of the `Numerics` package was
 /// right around when I picked this back up. Since (a) the `Real` protocol is the
 /// same as this--*mutatis mutandis*, etc.--I've decided to come back, base this
@@ -24,6 +28,7 @@ import Numerics
 /// detail--to be phased out in favor of `Real` as soon as possible.
 ///
 /// - note: `ExpressibleByFloatLiteral` seems to be one of the culprits behind crazy-slow compile times downstream. I'm replacing it with `Float` and `Double` initializers, with `Double` variant accessible as `Self.κ()`.
+/// - note: `ExpressibleByFloatLiteral` *aggravates* the underyling issues, but a *known* compiler regression seems to be the real problem.
 ///
 public protocol ExtendedFloatingPointMath : Real /*, ExpressibleByFloatLiteral */ {
   
@@ -63,43 +68,63 @@ public protocol ExtendedFloatingPointMath : Real /*, ExpressibleByFloatLiteral *
   // MARK: Extended Math API
   // ------------------------------------------------------------------------ //
   
+  /// Special-case returning the cube root of `value`.
   static func cubeRoot(of value: Self) -> Self
   
+  /// Simultaneously returns `(sin(value),cos(value))` (in units of radians).
   static func sineCosine(of value: Self) -> (Self,Self)
   
+  /// Provides `sin(π*value)`.
   static func sinePi(of value: Self) -> Self
-  static func cosinePi(of value: Self) -> Self
-  static func tangentPi(of value: Self) -> Self
-  static func sineCosinePi(of value: Self) -> (Self,Self)
   
+  /// Provides `cos(π*value)`.
+  static func cosinePi(of value: Self) -> Self
+  
+  /// Provides `tan(π*value)`.
+  static func tangentPi(of value: Self) -> Self
+  
+  /// Simultaneously provides `sin(π*value)` and `cos(π*value)`.
+  static func sineCosinePi(of value: Self) -> (Self,Self)
+
+  /// Like `arctangent2` but converting to π-units.
+  static func piArctangent2(y: Self, x: Self) -> Self
+
   static func twoToThePower(of value: Self) -> Self
   static func tenToThePower(of value: Self) -> Self
   
   static func baseTwoLogarithm(of value: Self) -> Self
   static func baseTenLogarithm(of value: Self) -> Self
   
-  static func piArctangent2(y: Self, x: Self) -> Self
 
   // ------------------------------------------------------------------------ //
   // MARK: Modulus-Convenience API
   // ------------------------------------------------------------------------ //
 
+  /// My name for a modulus wherein we make no effort to control the result sign.
   static func signedModulus(
     of value: Self,
     by modulus: Self) -> Self
-  
+
+  /// A floating-point "modulus" with results I guarantee will be `>= 0.0`.
   static func positiveModulus(
     of value: Self,
     by modulus: Self) -> Self
-
+  
+  /// A floating-point "modulus" with results I guarantee will be `<= 0.0`.
   static func negativeModulus(
     of value: Self,
     by modulus: Self) -> Self
   
 }
 
+// -------------------------------------------------------------------------- //
+// MARK: ExtendedFloatingPointMath - Default Implementations
+// -------------------------------------------------------------------------- //
+
 public extension ExtendedFloatingPointMath {
   
+  // To my knowledge we don't have a `__piatan2`, so this has no *numeric* benefit,
+  // but at least it keeps the code cleaner @ call sites...
   @inlinable
   static func piArctangent2(y: Self, x: Self) -> Self {
     return Self.atan2(y: y, x: x) / Self.pi

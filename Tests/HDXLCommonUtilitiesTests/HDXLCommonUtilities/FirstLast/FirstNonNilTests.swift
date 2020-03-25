@@ -2,7 +2,6 @@
 //  FirstNonNilTests.swift
 //
 
-import XCTest
 @testable import HDXLCommonUtilities
 
 class FirstNonNilTests: XCTestCase {
@@ -576,5 +575,4 @@ class FirstNonNilTests: XCTestCase {
 
   }
 
-  
 }

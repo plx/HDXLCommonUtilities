@@ -223,7 +223,7 @@ extension DirectoryOrigin : Codable {
     case value = "value"
     
     @inlinable
-    public var intValue: Int {
+    public var intValue: Int? {
       get {
         switch self {
         case .type:

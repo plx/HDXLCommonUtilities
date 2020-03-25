@@ -284,7 +284,7 @@ extension DynamicDirectoryLocationStorage : Codable {
     case directoryPath = "directoryPath"
     
     @inlinable
-    internal var intValue: Int {
+    internal var intValue: Int? {
       get {
         switch self {
         case .directoryOrigin:
