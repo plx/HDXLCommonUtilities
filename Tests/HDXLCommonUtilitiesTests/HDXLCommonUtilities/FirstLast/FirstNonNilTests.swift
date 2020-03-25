@@ -3,6 +3,7 @@
 //
 
 @testable import HDXLCommonUtilities
+import XCTest
 
 class FirstNonNilTests: XCTestCase {
   
