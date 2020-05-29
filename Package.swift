@@ -21,7 +21,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/plx/HDXLTestingUtilities",
-      from: "0.0.1"
+      from: "0.0.8"
     ),
     .package(
       url: "https://github.com/apple/swift-numerics",
