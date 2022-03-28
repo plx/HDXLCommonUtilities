@@ -173,13 +173,12 @@ extension IndexEnumerationByIndexCollection : Collection  {
       return (position,self.source[position])
     }
   }
-  
+
   @inlinable
-  public subscript<R>(r: R) -> SubSequence
-    where R : RangeExpression, Index == R.Bound {
-    return SubSequence(
-      source: self.source[r]
-    )
+  public subscript(indexRange: Range<Index>) -> SubSequence {
+    get {
+      return SubSequence(source: self.source[indexRange])
+    }
   }
   
   @inlinable

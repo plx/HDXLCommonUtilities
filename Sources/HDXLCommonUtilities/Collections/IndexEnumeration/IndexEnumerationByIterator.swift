@@ -183,10 +183,9 @@ extension IndexEnumerationByIteratorCollection : Collection  {
   }
   
   @inlinable
-  public subscript<R>(r: R) -> SubSequence
-    where R : RangeExpression, Index == R.Bound {
+  public subscript(indexRange: Range<Index>) -> SubSequence {
       return SubSequence(
-        source: self.source[r]
+        source: self.source[indexRange]
       )
   }
   

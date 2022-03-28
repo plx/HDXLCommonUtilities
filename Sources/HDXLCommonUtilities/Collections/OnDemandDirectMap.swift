@@ -157,12 +157,13 @@ extension OnDemandDirectMap : Collection where Base:Collection {
   }
   
   @inlinable
-  public subscript<R>(r: R) -> SubSequence
-    where R : RangeExpression, Index == R.Bound {
-    return SubSequence(
-      base: self.base[r],
-      mapping: self.mapping
-    )
+  public subscript(indexRange: Range<Index>) -> SubSequence {
+    get {
+      return SubSequence(
+        base: self.base[indexRange],
+        mapping: self.mapping
+      )
+    }
   }
   
   @inlinable
